@@ -38,7 +38,7 @@
                 data-app-id="{{ item.id }}"
                 data-section-id="{{ section.id }}"
             >
-                <a class="app-card__stretched-link" href="{{ item.href }}" aria-label="Open {{ item.name }}">
+                <a class="app-card__stretched-link" href="{{ app_href(item) }}" aria-label="Open {{ item.name }}">
                     <span class="visually-hidden">Open {{ item.name }}</span>
                 </a>
                 <div class="app-card__tile">

@@ -1,12 +1,12 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 
 app = Flask(__name__)
 
 OPEN_ONDEMAND_TOOLS_APPS = [
     {"id": "terminal", "name": "Terminal", "kind": "icon", "icon": "fas fa-terminal", "href": "#"},
-    {"id": "files", "name": "Files", "kind": "icon", "icon": "far fa-folder", "href": "/files"},
+    {"id": "files", "name": "Files", "kind": "icon", "icon": "far fa-folder", "endpoint": "files"},
     {"id": "rc-documents", "name": "RC Documents", "kind": "image", "image": "assets/RC-Document.svg", "href": "#"},
-    {"id": "partition-usage-status", "name": "Partition Usage Status", "kind": "usage", "usage": "80%", "href": "/partition-usage"},
+    {"id": "partition-usage-status", "name": "Partition Usage Status", "kind": "usage", "usage": "80%", "endpoint": "partition_usage"},
 ]
 
 # Demo data for Partition Usage Statistics (wireframe-aligned; replace with live cluster API later).
@@ -55,7 +55,7 @@ DASHBOARD_SECTIONS = [
                 "name": "Jupyter Notebook",
                 "kind": "image",
                 "image": "assets/Jupyter_Notebook_Logo.png",
-                "href": "/jupyter",
+                "endpoint": "jupyter",
                 "icon_img_size": "sm",
             },
             {
@@ -82,7 +82,7 @@ DASHBOARD_SECTIONS = [
         "id": "jobs",
         "title": "Jobs",
         "apps": [
-            {"id": "active-jobs", "name": "Active Jobs", "kind": "icon", "icon": "far fa-clock", "href": "/job-status"},
+            {"id": "active-jobs", "name": "Active Jobs", "kind": "icon", "icon": "far fa-clock", "endpoint": "job_status"},
             {"id": "job-composer", "name": "Job Composer", "kind": "icon", "icon": "fas fa-wand-magic-sparkles", "href": "#"},
         ],
     },
@@ -109,35 +109,44 @@ FILES_DIRECTORY = {
 }
 
 
+def app_href(item):
+    """Resolve dashboard / nav links for both local Flask and GitHub Pages (SCRIPT_NAME) exports."""
+    ep = item.get("endpoint")
+    if ep:
+        return url_for(ep)
+    return item.get("href", "#")
+
+
 @app.context_processor
 def inject_nav():
     return {
         "active_jobs": ACTIVE_JOBS,
         "tools_apps": OPEN_ONDEMAND_TOOLS_APPS,
+        "app_href": app_href,
     }
 
 
-@app.route("/")
+@app.route("/", strict_slashes=False)
 def dashboard():
     return render_template("dashboard.html", sections=DASHBOARD_SECTIONS)
 
 
-@app.route("/jupyter")
+@app.route("/jupyter/", strict_slashes=False)
 def jupyter():
     return render_template("jupyter.html")
 
 
-@app.route("/files")
+@app.route("/files/", strict_slashes=False)
 def files():
     return render_template("files.html", directory=FILES_DIRECTORY)
 
 
-@app.route("/job-status")
+@app.route("/job-status/", strict_slashes=False)
 def job_status():
     return render_template("job_status.html")
 
 
-@app.route("/partition-usage")
+@app.route("/partition-usage/", strict_slashes=False)
 def partition_usage():
     cu = CLUSTER_USAGE_STATS
     cluster_usage = {
