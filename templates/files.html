@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Files - PNNL OnDemand{% endblock %}
+
+{% block content %}
+<article class="dashboard-shell files-page" aria-labelledby="files-title" data-files-interface>
+    <h1 id="files-title" class="visually-hidden">Files</h1>
+
+    <section class="files-browser" aria-label="File browser">
+        <div class="files-toolbar" aria-label="File actions">
+            <div class="files-toolbar__group">
+                <button class="files-action" type="button" aria-label="Open in Terminal" title="Open in Terminal">
+                    <i class="fas fa-terminal" aria-hidden="true"></i>
+                    <span class="files-action__label">Open in Terminal</span>
+                </button>
+                <button class="files-action" type="button" aria-label="Refresh" title="Refresh">
+                    <i class="fas fa-rotate" aria-hidden="true"></i>
+                    <span class="files-action__label">Refresh</span>
+                </button>
+                <button class="files-action" type="button" aria-label="New File" title="New File">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    <span class="files-action__label">New File</span>
+                </button>
+                <button class="files-action" type="button" aria-label="New Directory" title="New Directory">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    <span class="files-action__label">New Directory</span>
+                </button>
+                <button class="files-action" type="button" aria-label="Upload" title="Upload">
+                    <i class="fas fa-upload" aria-hidden="true"></i>
+                    <span class="files-action__label">Upload</span>
+                </button>
+            </div>
+
+            <div class="files-toolbar__group files-toolbar__group--end">
+                <button class="files-action" type="button" data-selection-action aria-label="Download" title="Download">
+                    <i class="fas fa-download" aria-hidden="true"></i>
+                    <span class="files-action__label">Download</span>
+                </button>
+                <button class="files-action" type="button" data-selection-action aria-label="Copy or Move" title="Copy/Move">
+                    <i class="fas fa-copy" aria-hidden="true"></i>
+                    <span class="files-action__label">Copy/Move</span>
+                </button>
+                <button class="files-action" type="button" data-selection-action aria-label="Delete" title="Delete">
+                    <i class="fas fa-trash-can" aria-hidden="true"></i>
+                    <span class="files-action__label">Delete</span>
+                </button>
+            </div>
+        </div>
+
+        <nav class="files-pathbar" aria-label="Current directory">
+            <ol class="files-breadcrumb">
+                <li>
+                    <a href="#" aria-label="Home directory">
+                        <i class="fas fa-home" aria-hidden="true"></i>
+                    </a>
+                </li>
+                {% for segment in directory.segments %}
+                <li>
+                    <a href="#" {% if loop.last %}aria-current="page"{% endif %}>{{ segment }}</a>
+                </li>
+                {% endfor %}
+            </ol>
+            <button class="files-action files-action--path" type="button">
+                <i class="far fa-folder-open" aria-hidden="true"></i>
+                Navigate to new directory
+            </button>
+            <button class="files-action files-action--copy-path" type="button">
+                <i class="far fa-clipboard" aria-hidden="true"></i>
+                Copy path
+            </button>
+        </nav>
+
+        <div class="files-controls">
+            <div class="files-selection-summary">
+                <span class="files-selection-count" data-selection-count>{{ directory.rows|selectattr("selected")|list|length }} selected</span>
+                <button class="files-link-button" type="button" data-clear-selection>Clear selection</button>
+            </div>
+
+            <div class="files-view-options">
+                <label class="files-checkbox">
+                    <input type="checkbox" data-owner-toggle>
+                    <span>Show Owner/Mode</span>
+                </label>
+                <label class="files-checkbox">
+                    <input type="checkbox" data-dotfiles-toggle>
+                    <span>Show Dotfiles</span>
+                </label>
+                <label class="files-filter">
+                    <span>Filter:</span>
+                    <input type="search" placeholder="Filter files..." aria-label="Filter files" data-files-filter>
+                </label>
+            </div>
+        </div>
+
+        <div class="files-table-wrap">
+            <table class="files-table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="files-table__select">
+                            <input type="checkbox" aria-label="Select all visible files" data-select-all>
+                        </th>
+                        <th scope="col" class="files-table__type">Type</th>
+                        <th scope="col" class="files-table__name">
+                            <button class="files-sort" type="button" aria-label="Sort by name">
+                                Name
+                                <i class="fas fa-sort-up" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th scope="col" class="files-table__size">Size</th>
+                        <th scope="col" data-owner-column hidden>Owner</th>
+                        <th scope="col" data-owner-column hidden>Mode</th>
+                        <th scope="col" class="files-table__modified">Modified</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in directory.rows %}
+                    <tr class="files-row{% if row.selected %} is-selected{% endif %}" data-file-row data-file-name="{{ row.name|lower }}" {% if row.dotfile %}data-dotfile hidden{% endif %}>
+                        <td class="files-table__select">
+                            <input type="checkbox" aria-label="Select {{ row.name }}" data-row-checkbox {% if row.selected %}checked{% endif %}>
+                        </td>
+                        <td class="files-table__type">
+                            <span class="files-type-icon files-type-icon--{{ row.type }}" aria-label="{{ row.type }}">
+                                <i class="{{ row.icon }}" aria-hidden="true"></i>
+                            </span>
+                        </td>
+                        <td class="files-table__name">
+                            <a href="#">{{ row.name }}</a>
+                        </td>
+                        <td class="files-table__size">{{ row.size }}</td>
+                        <td data-owner-cell hidden>{{ row.owner }}</td>
+                        <td data-owner-cell hidden>{{ row.mode }}</td>
+                        <td class="files-table__modified">{{ row.modified }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <p class="files-table-status" data-table-status>Showing 1 to 10 of 10 rows</p>
+    </section>
+
+    <aside class="files-toast" role="status" aria-live="polite" data-files-toast>
+        <div class="files-toast__row">
+            <i class="fas fa-circle-check" aria-hidden="true"></i>
+            <span>script.sh uploaded successfully</span>
+            <button type="button" aria-label="Dismiss notification" data-toast-dismiss>
+                <i class="fas fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="files-toast__progress-track" aria-hidden="true">
+            <div class="files-toast__progress" data-files-toast-progress></div>
+        </div>
+    </aside>
+</article>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/files-interface.js') }}" defer></script>
+{% endblock %}

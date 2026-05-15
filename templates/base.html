@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+{% from "macros/rc_documents_icon.html" import rc_documents_icon %}
+<html lang="en">
+<head>
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem("pnnl-ondemand-theme") === "dark") {
+                    document.documentElement.classList.add("dark");
+                }
+            } catch (e) { /* ignore */ }
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PNNL OnDemand Dashboard{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="top-bar" aria-label="PNNL OnDemand navigation">
+        <a class="brand" href="/" aria-label="PNNL OnDemand home">
+            <span class="brand-logo" role="img" aria-label="PNNL"></span>
+        </a>
+
+        <div id="top-bar-menu-panel" class="top-bar-menu-panel" aria-label="Site menu">
+            <nav class="primary-nav" aria-label="Primary navigation">
+            <div class="top-bar-dropdown">
+                <button type="button" id="tools-menu-button" class="top-bar-dropdown-trigger" aria-label="Tools" aria-expanded="false" aria-haspopup="true" aria-controls="tools-menu">
+                    <i class="fas fa-screwdriver-wrench fa-fw" aria-hidden="true"></i>
+                    <span class="top-bar__label" aria-hidden="true">Tools</span>
+                    <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
+                </button>
+                <div id="tools-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--start" role="menu" hidden>
+                    {% for app in tools_apps %}
+                    <a class="top-bar-dropdown-item" role="menuitem" title="{{ app.name }}" href="{{ app.href }}">
+                        {% if app.kind == "usage" %}
+                        <span class="top-bar-dropdown-usage-icon" aria-hidden="true"><span>{{ app.usage }}</span></span>
+                        {% elif app.kind == "image" %}
+                        {% if app.id == "rc-documents" %}
+                        {{ rc_documents_icon("top-bar-dropdown-app-img") }}
+                        {% else %}
+                        <img class="top-bar-dropdown-app-img" src="{{ url_for('static', filename=app.image) }}" alt="" />
+                        {% endif %}
+                        {% else %}
+                        <i class="{{ app.icon }} fa-fw" aria-hidden="true"></i>
+                        {% endif %}
+                        {{ app.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="top-bar-dropdown">
+                <button type="button" id="active-menu-button" class="top-bar-dropdown-trigger" aria-label="Active jobs" aria-expanded="false" aria-haspopup="true" aria-controls="active-menu">
+                    <i class="fas fa-list-check fa-fw" aria-hidden="true"></i>
+                    <span class="top-bar__label" aria-hidden="true">Active</span>
+                    <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
+                </button>
+                <div id="active-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--start" role="menu" hidden>
+                    {% if active_jobs %}
+                        {% for job in active_jobs %}
+                        <span class="top-bar-dropdown-item top-bar-dropdown-item--job" role="menuitem">{{ job }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="top-bar-dropdown-empty" role="menuitem">No active jobs present</span>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Help menu URLs mirror Open-OnDemand-UW-UX-UI-Demo reference base.html -->
+            <div class="top-bar-dropdown">
+                <button type="button" id="help-menu-button" class="help-link top-bar-dropdown-trigger" aria-label="Help" aria-expanded="false" aria-haspopup="true" aria-controls="help-menu">
+                    <i class="fas fa-question" aria-hidden="true"></i>
+                    <span class="top-bar__label" aria-hidden="true">Help</span>
+                    <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
+                </button>
+                <div id="help-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--start" role="menu" hidden>
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Online Documentation" href="https://hpc.tanuki-pages.pnnl.gov/user-docs/how-tos/access/openondemand.html" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-info-circle fa-fw" aria-hidden="true"></i>
+                        Online Documentation
+                    </a>
+                </div>
+            </div>
+            </nav>
+
+            <nav class="utility-nav" aria-label="Utility navigation">
+            <div class="top-bar-dropdown">
+                <button
+                    type="button"
+                    id="notifications-menu-button"
+                    class="top-bar-dropdown-trigger top-bar-dropdown-trigger--bell"
+                    aria-label="Notifications, 2 unread"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="notifications-panel"
+                >
+                    <i class="fas fa-bell" aria-hidden="true"></i>
+                    <span class="notification-bell-badge" aria-hidden="true">2</span>
+                </button>
+                <div
+                    id="notifications-panel"
+                    class="top-bar-dropdown-panel top-bar-dropdown-panel--end notifications-dropdown"
+                    role="region"
+                    aria-labelledby="notifications-dropdown-title"
+                    hidden
+                >
+                    <div class="notifications-dropdown-header">
+                        <h2 id="notifications-dropdown-title" class="notifications-dropdown-title">Notifications</h2>
+                    </div>
+                    <ul class="notifications-list">
+                        <li class="notification-card notification-card--maintenance">
+                            <span class="notification-card__label">System maintenance</span>
+                            <p class="notification-card__text">
+                                Scheduled maintenance Sunday 2:00–6:00 AM Pacific. Batch jobs will continue to run; interactive
+                                OnDemand sessions may be interrupted briefly during the window.
+                            </p>
+                        </li>
+                        <li class="notification-card">
+                            <span class="notification-card__label">Cluster usage</span>
+                            <p class="notification-card__text">
+                                Swift partition is at elevated utilization. Consider shorter walltimes or an alternate partition if
+                                your job queues longer than usual.
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="top-bar-dropdown">
+                <button type="button" id="development-menu-button" class="development-link top-bar-dropdown-trigger" aria-label="Development" aria-expanded="false" aria-haspopup="true" aria-controls="development-menu">
+                    <span class="code-mark" aria-hidden="true">&lt;/&gt;</span>
+                    <span class="top-bar__label" aria-hidden="true">Development</span>
+                    <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
+                </button>
+                <div id="development-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--end" role="menu" hidden>
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Developer Documentation" href="https://go.osu.edu/ood-app-dev" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-book fa-fw" aria-hidden="true"></i>
+                        Developer Documentation
+                    </a>
+                    <a class="top-bar-dropdown-item" role="menuitem" title="My Sandbox Apps (Development)" href="#">
+                        <i class="fas fa-cog fa-fw" aria-hidden="true"></i>
+                        My Sandbox Apps (Development)
+                    </a>
+                </div>
+            </div>
+            <div class="top-bar-dropdown top-bar-dropdown--hoverable">
+                <button
+                    type="button"
+                    id="user-menu-button"
+                    class="top-bar-dropdown-trigger top-bar-dropdown-trigger--user"
+                    aria-label="Account menu, signed in as User 1"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="user-menu"
+                >
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span class="top-bar__label" aria-hidden="true">User 1</span>
+                </button>
+                <div id="user-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--end user-menu-panel" role="menu" hidden>
+                    <a class="top-bar-dropdown-item" role="menuitem" href="#" aria-label="Log out">
+                        <i class="fas fa-right-from-bracket fa-fw" aria-hidden="true"></i>
+                        Log Out
+                    </a>
+                </div>
+            </div>
+            </nav>
+        </div>
+
+        <button
+            type="button"
+            id="top-bar-menu-toggle"
+            class="top-bar-menu-toggle"
+            aria-expanded="false"
+            aria-controls="top-bar-menu-panel"
+            aria-label="Open menu"
+        >
+            <i class="fas fa-bars top-bar-menu-toggle__icon-open" aria-hidden="true"></i>
+            <i class="fas fa-xmark top-bar-menu-toggle__icon-close" aria-hidden="true"></i>
+        </button>
+        <div class="top-bar-menu-backdrop" id="top-bar-menu-backdrop" hidden aria-hidden="true"></div>
+    </header>
+
+    <main id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    {% block extra_scripts %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/theme-toggle.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/top-bar-mobile-menu.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/top-bar-dropdowns.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}" defer></script>
+</body>
+</html>

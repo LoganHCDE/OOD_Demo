@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% from "macros/rc_documents_icon.html" import rc_documents_icon %}
+
+{% block title %}Dashboard - PNNL OnDemand{% endblock %}
+
+{% block content %}
+<section class="dashboard-shell" aria-labelledby="dashboard-title">
+    <div class="dashboard-top">
+        <div class="hero">
+            <h1 id="dashboard-title">Welcome to <span>PNNL</span></h1>
+            <div class="ood-logo">
+                <img
+                    class="ood-logo-img"
+                    src="{{ url_for('static', filename='assets/OpenOndemand Logo.png') }}"
+                    alt="Open OnDemand"
+                />
+            </div>
+        </div>
+    </div>
+
+    <section id="dashboard-favorites" class="app-section app-section--favorites" aria-labelledby="favorites-section-title" hidden>
+        <div class="section-heading">
+            <h2 id="favorites-section-title">Favorited</h2>
+        </div>
+        <div id="favorites-grid" class="app-grid" data-section-id="favorites"></div>
+    </section>
+
+    {% for section in sections %}
+    <section class="app-section" aria-labelledby="section-{{ loop.index }}">
+        <div class="section-heading">
+            <h2 id="section-{{ loop.index }}">{{ section.title }}</h2>
+        </div>
+
+        <div id="section-grid-{{ section.id }}" class="app-grid" data-section-id="{{ section.id }}">
+            {% for item in section.apps %}
+            <div
+                class="app-card"
+                data-app-id="{{ item.id }}"
+                data-section-id="{{ section.id }}"
+            >
+                <a class="app-card__stretched-link" href="{{ item.href }}" aria-label="Open {{ item.name }}">
+                    <span class="visually-hidden">Open {{ item.name }}</span>
+                </a>
+                <div class="app-card__tile">
+                    <button
+                        type="button"
+                        class="pin{% if item.favorite %} is-filled{% endif %}"
+                        aria-pressed="{% if item.favorite %}true{% else %}false{% endif %}"
+                        aria-label="{% if item.favorite %}Remove {{ item.name }} from favorites{% else %}Add {{ item.name }} to favorites{% endif %}"
+                    >
+                        <i class="{% if item.favorite %}fas{% else %}far{% endif %} fa-star" aria-hidden="true"></i>
+                    </button>
+
+                    {% if item.kind == "usage" %}
+                    <span class="usage-icon" aria-hidden="true">
+                        <span>{{ item.usage }}</span>
+                    </span>
+                    {% elif item.kind == "brand" %}
+                    <span class="brand-icon brand-{{ item.brand }}" aria-hidden="true">
+                        <span>{{ item.name }}</span>
+                    </span>
+                    {% elif item.kind == "image" %}
+                    <span class="app-icon" aria-hidden="true">
+                        {% if item.id == "rc-documents" %}
+                            {{ rc_documents_icon(
+                                "app-icon-img"
+                                ~ (" app-icon-img--sm" if item.icon_img_size == "sm" else "")
+                                ~ (" app-icon-img--lg" if item.icon_img_size == "lg" else "")
+                            ) }}
+                        {% else %}
+                        <img
+                            class="app-icon-img{% if item.icon_img_size == 'sm' %} app-icon-img--sm{% elif item.icon_img_size == 'lg' %} app-icon-img--lg{% endif %}"
+                            src="{{ url_for('static', filename=item.image) }}"
+                            alt=""
+                        />
+                        {% endif %}
+                    </span>
+                    {% else %}
+                    <span class="app-icon" aria-hidden="true">
+                        <i class="{{ item.icon }}"></i>
+                    </span>
+                    {% endif %}
+                </div>
+                <span class="app-name">{{ item.name }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/app-favorites.js') }}" defer></script>
+{% endblock %}
