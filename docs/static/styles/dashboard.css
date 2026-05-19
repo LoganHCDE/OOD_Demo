@@ -524,16 +524,19 @@ a {
 }
 
 .notification-item {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7.5rem;
     align-items: center;
     gap: 14px;
     margin: 0;
     padding: 8px 14px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .notification-card {
-    flex: 1 1 auto;
     min-width: 0;
+    width: 100%;
     margin: 0;
     padding: 12px 14px;
     border-radius: var(--radius-md);
@@ -570,7 +573,8 @@ a {
 }
 
 .notification-item__time {
-    flex: 0 0 auto;
+    justify-self: end;
+    text-align: right;
     font-size: 0.9rem;
     font-weight: 600;
     line-height: 1.2;
@@ -1142,13 +1146,12 @@ html.dark .rc-documents-icon__book-inner {
     }
 
     .top-bar-menu-panel .notification-item {
-        flex-direction: column;
-        align-items: stretch;
+        grid-template-columns: 1fr;
         gap: 6px;
     }
 
     .top-bar-menu-panel .notification-item__time {
-        align-self: flex-end;
+        justify-self: end;
     }
 
     .top-bar-menu-panel .help-link {
@@ -1173,13 +1176,12 @@ html.dark .rc-documents-icon__book-inner {
     }
 
     .notification-item {
-        flex-direction: column;
-        align-items: stretch;
+        grid-template-columns: 1fr;
         gap: 6px;
     }
 
     .notification-item__time {
-        align-self: flex-end;
+        justify-self: end;
     }
 
     .dashboard-shell {
