@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
     <script id="pnnl-user-settings-defaults" type="application/json">{{ user_settings_defaults | tojson }}</script>
 </head>
-<body>
+<body data-app-base="{{ request.script_root }}">
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <header class="top-bar" aria-label="PNNL OnDemand navigation">

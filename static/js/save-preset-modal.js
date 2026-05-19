@@ -65,9 +65,14 @@
         return true;
     }
 
+    function appUrl(path) {
+        var base = document.body.getAttribute("data-app-base") || "";
+        return base + (path.charAt(0) === "/" ? path : "/" + path);
+    }
+
     function launchJob() {
         if (!canLaunch()) return;
-        window.location.href = "/job-status";
+        window.location.href = appUrl("/job-status");
     }
 
     openButton.addEventListener("click", function () {

@@ -1,13 +1,33 @@
-from flask import Flask, render_template
+from copy import deepcopy
+
+from flask import Flask, render_template, url_for
 
 app = Flask(__name__)
 
 OPEN_ONDEMAND_TOOLS_APPS = [
     {"id": "terminal", "name": "Terminal", "kind": "icon", "icon": "fas fa-terminal", "href": "#"},
-    {"id": "files", "name": "Files", "kind": "icon", "icon": "far fa-folder", "href": "/files"},
+    {"id": "files", "name": "Files", "kind": "icon", "icon": "far fa-folder", "endpoint": "files"},
     {"id": "rc-documents", "name": "RC Documents", "kind": "image", "image": "assets/RC-Document.svg", "href": "#"},
-    {"id": "partition-usage-status", "name": "Partition Usage Status", "kind": "usage", "usage": "80%", "href": "/partition-usage"},
+    {
+        "id": "partition-usage-status",
+        "name": "Partition Usage Status",
+        "kind": "usage",
+        "usage": "80%",
+        "endpoint": "partition_usage",
+    },
 ]
+
+
+def resolve_app_links(apps: list[dict]) -> list[dict]:
+    """Resolve internal routes via url_for (respects SCRIPT_NAME on GitHub Pages)."""
+    resolved = []
+    for entry in apps:
+        item = dict(entry)
+        endpoint = item.get("endpoint")
+        if endpoint:
+            item["href"] = url_for(endpoint)
+        resolved.append(item)
+    return resolved
 
 # Demo data for Partition Usage Statistics (wireframe-aligned; replace with live cluster API later).
 CLUSTER_USAGE_STATS = {
@@ -55,7 +75,7 @@ DASHBOARD_SECTIONS = [
                 "name": "Jupyter Notebook",
                 "kind": "image",
                 "image": "assets/Jupyter.svg",
-                "href": "/jupyter",
+                "endpoint": "jupyter",
             },
             {"id": "matlab", "name": "Matlab", "kind": "image", "image": "assets/Matlab_Logo.png", "href": "#"},
             {"id": "rstudio", "name": "RStudio", "kind": "image", "image": "assets/R_logo.svg", "href": "#", "icon_img_size": "sm"},
@@ -74,7 +94,7 @@ DASHBOARD_SECTIONS = [
         "id": "jobs",
         "title": "Jobs",
         "apps": [
-            {"id": "active-jobs", "name": "Active Jobs", "kind": "icon", "icon": "far fa-clock", "href": "/job-status"},
+            {"id": "active-jobs", "name": "Active Jobs", "kind": "icon", "icon": "far fa-clock", "endpoint": "job_status"},
             {"id": "job-composer", "name": "Job Composer", "kind": "icon", "icon": "fas fa-wand-magic-sparkles", "href": "#"},
         ],
     },
@@ -113,14 +133,19 @@ USER_SETTINGS_DEFAULTS = {
 def inject_nav():
     return {
         "active_jobs": ACTIVE_JOBS,
-        "tools_apps": OPEN_ONDEMAND_TOOLS_APPS,
+        "tools_apps": resolve_app_links(OPEN_ONDEMAND_TOOLS_APPS),
         "user_settings_defaults": USER_SETTINGS_DEFAULTS,
     }
 
 
 @app.route("/")
 def dashboard():
-    return render_template("dashboard.html", sections=DASHBOARD_SECTIONS)
+    sections = []
+    for section in DASHBOARD_SECTIONS:
+        section_copy = deepcopy(section)
+        section_copy["apps"] = resolve_app_links(section["apps"])
+        sections.append(section_copy)
+    return render_template("dashboard.html", sections=sections)
 
 
 @app.route("/jupyter")
