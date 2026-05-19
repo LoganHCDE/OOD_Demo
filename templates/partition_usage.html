@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Partition Usage Statistics | PNNL OnDemand Dashboard{% endblock %}
+
+{% block content %}
+{% set C = cluster_usage.gauge_circumference %}
+<article class="dashboard-shell cluster-usage-page" data-cluster-usage-page data-cluster-usage-mode="user" aria-label="Partition usage statistics">
+    <div class="cluster-usage-tooltip" id="cluster-usage-tooltip" role="tooltip" hidden></div>
+    <nav class="jupyter-breadcrumb" aria-label="Breadcrumb">
+        <a href="/"><i class="fas fa-home" aria-hidden="true"></i> Home</a>
+        <span class="jupyter-breadcrumb__sep" aria-hidden="true">/</span>
+        <span aria-current="page">Partition usage status</span>
+    </nav>
+
+    <header class="cluster-usage-page__masthead">
+        <h1 class="cluster-usage-page__title">Partition Usage Statistics</h1>
+
+        <div class="cluster-usage-role-selector" role="group" aria-label="View statistics as user or administrator">
+            <button
+                type="button"
+                class="cluster-usage-role-selector__button is-selected"
+                data-cluster-usage-role="user"
+                aria-pressed="true"
+            >
+                <i class="fas fa-user" aria-hidden="true"></i>
+                User
+            </button>
+            <button
+                type="button"
+                class="cluster-usage-role-selector__button"
+                data-cluster-usage-role="admin"
+                aria-pressed="false"
+            >
+                Admin
+            </button>
+        </div>
+    </header>
+
+    <div class="cluster-usage-page__body" data-cluster-usage-panel="user" aria-hidden="false">
+        <section class="cluster-usage-gauges" aria-labelledby="cluster-usage-gauges-heading">
+            <h2 id="cluster-usage-gauges-heading" class="visually-hidden">Resource availability gauges</h2>
+
+            {% for gauge in cluster_usage.gauges %}
+                {% set arc_len = (C * gauge.usage_pct / 100) | round(2) %}
+                {% set rem_len = (C * (100 - gauge.usage_pct) / 100) | round(2) %}
+                {% set gauge_tier = 'high' if gauge.usage_pct >= 75 else gauge.tier %}
+                {% set gauge_style = 'partition' if gauge.id == 'partition' else gauge_tier %}
+
+                <div class="cluster-usage-gauge">
+                    <h3 class="cluster-usage-gauge__title">{{ gauge.title }}</h3>
+                    <div class="cluster-usage-gauge__figure">
+                        <svg
+                            viewBox="0 0 120 120"
+                            class="cluster-usage-gauge__svg"
+                            role="img"
+                            aria-label="{% if gauge.id == 'partition' %}{{ gauge.title }}, {{ gauge.usage_pct }}% used. {{ gauge.full_partitions }} full partition{% if gauge.full_partitions != 1 %}s{% endif %}.{% else %}{{ gauge.title }}, {{ gauge.usage_pct }}% used. Available {{ gauge.available }}.{% endif %}"
+                        >
+                            <g transform="rotate(-90 60 60)" aria-hidden="true">
+                                <circle class="cluster-usage-gauge__track" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-dasharray="{{ C }} {{ C }}"/>
+                                {% if arc_len > 0 %}
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--used cluster-usage-gauge__arc cluster-usage-gauge__arc--{{ gauge_style }}"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="{{ arc_len }} {{ C }}"
+                                        data-gauge-title="{{ gauge.title }}"
+                                        data-usage-pct="{{ gauge.usage_pct }}"
+                                        {% if gauge.id != 'partition' %}data-available="{{ gauge.available }}"{% else %}data-full-partitions="{{ gauge.full_partitions }}"{% endif %}
+                                        data-segment="used"
+                                    />
+                                {% endif %}
+                                {% if rem_len > 0 %}
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--available cluster-usage-gauge__arc--available-ring"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="{{ rem_len }} {{ C }}"
+                                        stroke-dashoffset="-{{ arc_len }}"
+                                        data-gauge-title="{{ gauge.title }}"
+                                        data-usage-pct="{{ gauge.usage_pct }}"
+                                        {% if gauge.id != 'partition' %}data-available="{{ gauge.available }}"{% else %}data-full-partitions="{{ gauge.full_partitions }}"{% endif %}
+                                        data-segment="available"
+                                    />
+                                {% endif %}
+                            </g>
+                            <text
+                                x="60"
+                                y="61"
+                                class="cluster-usage-gauge__percent cluster-usage-gauge__percent--{{ gauge_style }}"
+                                dominant-baseline="central"
+                                text-anchor="middle"
+                                aria-hidden="true"
+                            >{{ gauge.usage_pct }}%</text>
+                        </svg>
+                    </div>
+                    {% if gauge.id == 'partition' %}
+                    <p class="cluster-usage-gauge__available">Full partitions: <strong>{{ gauge.full_partitions }}</strong></p>
+                    {% else %}
+                    <p class="cluster-usage-gauge__available">Available: <strong>{{ gauge.available }}</strong></p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </section>
+
+        <section class="cluster-usage-partition-card" aria-labelledby="partition-status-heading">
+            <h2 id="partition-status-heading" class="cluster-usage-partition-card__title">Partition status</h2>
+
+            <div class="cluster-usage-bars" role="img" aria-label="Partition usage by percent, from 10 to 100">
+                <div class="cluster-usage-bars__label-col" role="presentation">
+                    {% for row in cluster_usage.partitions %}
+                        {% set bar_tier = 'high' if row.usage_pct >= 75 else row.tier %}
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="{{ loop.index0 }}"
+                            data-partition-label="{{ row.label }}"
+                            data-usage-pct="{{ row.usage_pct }}"
+                            data-tier="{{ bar_tier }}"
+                        >{{ row.label }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="cluster-usage-bars__plot-col" role="presentation">
+                    <div class="cluster-usage-bars__plot">
+                        <div class="cluster-usage-bars__v-grid" aria-hidden="true">
+                            {% for i in range(10) %}
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="cluster-usage-bars__tracks">
+                            {% for row in cluster_usage.partitions %}
+                                {% set bar_tier = 'high' if row.usage_pct >= 75 else row.tier %}
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="{{ loop.index0 }}"
+                                    data-partition-label="{{ row.label }}"
+                                    data-usage-pct="{{ row.usage_pct }}"
+                                    data-tier="{{ bar_tier }}"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--{{ bar_tier }}" style="width: {{ row.usage_pct }}%;"></span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="cluster-usage-bars__x-axis" aria-hidden="true">
+                        {% for pct in range(10, 101, 10) %}
+                            <span class="cluster-usage-bars__x-tick">{{ pct }}%</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <section class="job-summary job-summary--triple" aria-label="Cluster job totals">
+                <div class="job-summary__item">
+                    <span class="job-summary__label">Jobs Running</span>
+                    <strong class="job-summary__value">{{ cluster_usage.jobs_running_display }}</strong>
+                </div>
+                <div class="job-summary__item">
+                    <span class="job-summary__label">Jobs Queued</span>
+                    <strong class="job-summary__value">{{ cluster_usage.jobs_queued_display }}</strong>
+                </div>
+                <div class="job-summary__item">
+                    <span class="job-summary__label">Avg. time in queue</span>
+                    <strong class="job-summary__value">{{ cluster_usage.avg_queue_wait_display }}</strong>
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <div
+        class="cluster-usage-page__admin-panel"
+        data-cluster-usage-panel="admin"
+        hidden
+        aria-hidden="true"
+        aria-label="Administrator view"
+    ></div>
+</article>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/partition_usage.js') }}" defer></script>
+{% endblock %}

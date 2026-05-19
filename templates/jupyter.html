@@ -1,0 +1,525 @@
+{% extends "base.html" %}
+
+{% block title %}Jupyter - PNNL OnDemand{% endblock %}
+
+{% block content %}
+<article class="dashboard-shell jupyter-submit-page">
+    <nav class="jupyter-breadcrumb" aria-label="Breadcrumb">
+        <a href="/"><i class="fas fa-home" aria-hidden="true"></i> Home</a>
+        <span class="jupyter-breadcrumb__sep" aria-hidden="true">/</span>
+        <a href="/#section-grid-interactive-apps">Interactive Apps</a>
+        <span class="jupyter-breadcrumb__sep" aria-hidden="true">/</span>
+        <span aria-current="page">Jupyter</span>
+    </nav>
+
+    <div class="jupyter-layout">
+        <aside class="jupyter-sidebar" aria-label="Session preferences">
+            <section class="jupyter-side-card account-card" aria-labelledby="account-card-title">
+                <h2 id="account-card-title" class="visually-hidden">Account and email preferences</h2>
+
+                <p class="account-card__line">
+                    <strong>Billing Account:</strong>
+                    <span id="billing-account-display" data-billing-account-display>Oceanography Dept.</span>
+                    <button class="account-card__change" type="button" data-user-settings-open data-user-settings-section="billing">(Manage)</button>
+                </p>
+                <p class="account-card__line">
+                    <strong>Email:</strong>
+                    <span id="user-email-display" data-user-settings-email-display>User@email.com</span>
+                    <button class="account-card__change" type="button" data-user-settings-open data-user-settings-section="email">(Change)</button>
+                </p>
+
+                <fieldset class="account-card__email-notifications jupyter-checkbox-list">
+                    <legend class="account-card__email-legend">Receive an Email:</legend>
+                    <div class="jupyter-checkbox">
+                        <input value="1" type="checkbox" name="bc_email_on_started" id="bc_email_on_started" form="jupyter-session-form">
+                        <label for="bc_email_on_started">on Session Start</label>
+                    </div>
+                    <div class="jupyter-checkbox">
+                        <input value="1" type="checkbox" name="bc_email_on_terminated" id="bc_email_on_terminated" form="jupyter-session-form">
+                        <label for="bc_email_on_terminated">On Session Completion</label>
+                    </div>
+                    <div class="jupyter-checkbox">
+                        <input value="1" type="checkbox" name="bc_email_on_error" id="bc_email_on_error" form="jupyter-session-form">
+                        <label for="bc_email_on_error">On Session Error</label>
+                    </div>
+                </fieldset>
+            </section>
+
+            <section class="jupyter-side-card package-installer" aria-labelledby="package-installer-title">
+                <h2 id="package-installer-title">Package Installer</h2>
+
+                <label class="visually-hidden" for="package-search">Search Packages</label>
+                <div class="package-search">
+                    <input id="package-search" type="search" placeholder="Search Packages">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                </div>
+
+                <fieldset class="package-options">
+                    <legend class="visually-hidden">Packages to install</legend>
+                    <div class="package-option">
+                        <input type="checkbox" name="packages" id="package-numpy" value="numpy" form="jupyter-session-form">
+                        <label for="package-numpy">Numpy</label>
+                        <button type="button" class="package-favorite" aria-pressed="false" aria-label="Favorite Numpy">
+                            <i class="far fa-star" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="package-option">
+                        <input type="checkbox" name="packages" id="package-pandas" value="pandas" checked form="jupyter-session-form">
+                        <label for="package-pandas">Pandas</label>
+                        <button type="button" class="package-favorite is-active" aria-pressed="true" aria-label="Pandas is favorited">
+                            <i class="fas fa-star" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="package-option">
+                        <input type="checkbox" name="packages" id="package-seaborn" value="seaborn" form="jupyter-session-form">
+                        <label for="package-seaborn">Seaborn</label>
+                        <span class="package-meta">Recently Used</span>
+                        <button type="button" class="package-favorite" aria-pressed="false" aria-label="Favorite Seaborn">
+                            <i class="far fa-star" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="package-option">
+                        <input type="checkbox" name="packages" id="package-pytorch" value="pytorch" form="jupyter-session-form">
+                        <label for="package-pytorch">Pytorch</label>
+                        <span class="package-meta">Recently Used</span>
+                        <button type="button" class="package-favorite" aria-pressed="false" aria-label="Favorite Pytorch">
+                            <i class="far fa-star" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </fieldset>
+
+                <div class="package-selection" aria-label="Packages selected for installation">
+                    <h3>Packages to Install</h3>
+                    <div class="package-chip-list" id="package-chip-list" aria-live="polite"></div>
+                </div>
+            </section>
+        </aside>
+
+        <section class="jupyter-form-card" aria-labelledby="jupyter-form-title">
+            <h1 id="jupyter-form-title">Jupyter Notebook</h1>
+
+            <form id="jupyter-session-form" class="jupyter-form new_batch_connect_session_context" method="post">
+                <input type="hidden" name="mode" value="0" id="jupyter_mode_notebook">
+                <input type="hidden" name="account" id="account" value="ops">
+                <input type="hidden" name="user_email" id="user_email" value="User@email.com">
+                <input type="hidden" name="ood_num_hours" id="ood_num_hours" value="01:30:00">
+
+                <div class="jupyter-field jupyter-field--inline">
+                    <label for="job_template">Job Template:</label>
+                    <select name="job_template" id="job_template">
+                        <option value="custom" selected>Custom</option>
+                        <option value="portal-gun-research">Portal Gun Research</option>
+                        <option value="combine-empire-visualization">Combine Empire Visualization</option>
+                    </select>
+                </div>
+
+                <div class="jupyter-field">
+                    <label for="job_name">Job Name: <span aria-hidden="true">*</span></label>
+                    <input value="" required type="text" name="job_name" id="job_name">
+                </div>
+
+                <section class="jupyter-form-section" aria-labelledby="compute-allocation-title">
+                    <h2 id="compute-allocation-title">Computer Usage Allocation</h2>
+
+                    <div class="jupyter-field">
+                        <span class="jupyter-label">Job Time: <span aria-hidden="true">*</span></span>
+                        <div class="job-time-grid" aria-label="Requested job time">
+                            <label>
+                                <input type="number" min="0" max="999" value="1" id="jupyter-job-hours" aria-label="Hour">
+                                <span class="job-time-unit" data-singular="Hour" data-plural="Hours">Hour</span>
+                            </label>
+                            <label>
+                                <input type="number" min="0" max="59" value="30" id="jupyter-job-minutes" aria-label="Minutes">
+                                <span class="job-time-unit" data-singular="Minute" data-plural="Minutes">Minutes</span>
+                            </label>
+                        </div>
+                        <p class="jupyter-help">Requested walltime is submitted as 01:30:00 (seconds are always 00).</p>
+                    </div>
+
+                    <div
+                        class="resource-availability"
+                        data-resource-availability
+                        data-resource-label="Nodes"
+                        data-resource-total="222"
+                    >
+                        <div class="resource-availability__label">
+                            <span data-resource-count>Nodes Available: --</span>
+                        </div>
+                        <div
+                            class="resource-availability__meter"
+                            role="meter"
+                            aria-label="Nodes available"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="0"
+                        >
+                            <span class="resource-availability__fill" data-resource-fill></span>
+                            <span class="resource-availability__percent" data-resource-percent>--%</span>
+                        </div>
+                    </div>
+
+                    <div class="jupyter-field">
+                        <label for="bc_num_nodes">Number of Nodes: <span aria-hidden="true">*</span></label>
+                        <input value="1" min="1" max="168" step="1" required type="number" name="bc_num_nodes" id="bc_num_nodes">
+                    </div>
+
+                    <div class="jupyter-field-grid">
+                        <div class="jupyter-field">
+                            <label for="partition_list">Partition <span aria-hidden="true">*</span></label>
+                            <select name="partition_list" id="partition_list">
+                                <option value="slurm" data-partition-name="slurm" selected>slurm</option>
+                                <option value="short" data-partition-name="short">short</option>
+                                <option value="a100" data-partition-name="a100">a100</option>
+                                <option value="a100_shared" data-partition-name="a100_shared">a100_shared</option>
+                                <option value="h100" data-partition-name="h100">h100</option>
+                                <option value="h100_shared" data-partition-name="h100_shared">h100_shared</option>
+                                <option value="fat" data-partition-name="fat">fat</option>
+                                <option value="fat_shared" data-partition-name="fat_shared">fat_shared</option>
+                                <option value="custom" data-partition-name="custom">custom</option>
+                            </select>
+                        </div>
+
+                        <div class="jupyter-field">
+                            <label for="custom_partition">Custom Partition</label>
+                            <input value="" type="text" name="custom_partition" id="custom_partition" placeholder="Optional">
+                        </div>
+                    </div>
+
+                    <div class="resource-availability" data-partition-availability>
+                        <div class="resource-availability__label">
+                            <span data-partition-count>Partition Usage: --</span>
+                        </div>
+                        <div
+                            class="resource-availability__meter"
+                            role="meter"
+                            aria-label="Selected partition usage"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="0"
+                        >
+                            <span class="resource-availability__fill" data-partition-fill></span>
+                            <span class="resource-availability__percent" data-partition-percent>--%</span>
+                        </div>
+                    </div>
+
+                    <div class="jupyter-field-grid jupyter-field-grid--thirds">
+                        <div class="jupyter-field">
+                            <label for="bc_num_tasks">Tasks per Node <span aria-hidden="true">*</span></label>
+                            <input value="1" min="1" max="168" required type="number" name="bc_num_tasks" id="bc_num_tasks">
+                        </div>
+
+                        <div class="jupyter-field">
+                            <label for="bc_num_cores">Cores per Task <span aria-hidden="true">*</span></label>
+                            <input value="16" step="1" required type="number" name="bc_num_cores" id="bc_num_cores">
+                        </div>
+
+                        <div class="jupyter-field">
+                            <label for="bc_num_gpus">GPUs <span aria-hidden="true">*</span></label>
+                            <input value="0" min="0" max="8" step="1" required type="number" name="bc_num_gpus" id="bc_num_gpus">
+                        </div>
+                    </div>
+
+                </section>
+
+                <section class="jupyter-form-section" aria-labelledby="environment-setup-title">
+                    <h2 id="environment-setup-title">Environment Setup</h2>
+
+                    <div class="jupyter-field">
+                        <div class="jupyter-field-label-row">
+                            <label for="py_module">Python Version:</label>
+                            <button class="jupyter-field-help-trigger" type="button" data-field-help="py_module" aria-label="Learn about Python Version">
+                                <i class="fas fa-question" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <select name="py_module" id="py_module">
+                            <option value="python/3.10" selected>3.10 (default)</option>
+                            <option value="python/3.11.13">Python 3.11.13</option>
+                            <option value="python/3.13.5">Python 3.13.5</option>
+                        </select>
+                    </div>
+
+                    <div class="jupyter-field">
+                        <div class="jupyter-field-label-row">
+                            <label for="py_option">Python Source</label>
+                            <button class="jupyter-field-help-trigger" type="button" data-field-help="py_option" aria-label="Learn about Python Source">
+                                <i class="fas fa-question" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <select name="py_option" id="py_option">
+                            <option value="0">use an Anaconda module</option>
+                            <option value="1">use a Python module</option>
+                            <option value="2">use a custom version of Python</option>
+                            <option value="3" selected>use a container</option>
+                        </select>
+                        <p id="py-option-package-note" class="jupyter-field-note jupyter-field-note--warning" hidden role="note">
+                            Any installed packages may work differently in different environments.
+                        </p>
+                    </div>
+
+                    <div class="jupyter-field-grid">
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="sif_file">Container to use</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="sif_file" aria-label="Learn about Container to use">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <select name="sif_file" id="sif_file">
+                                <option value="/vast/projects/ops/base_images/jupyter-server.sif">Python 3.13</option>
+                                <option value="/vast/projects/ops/base_images/jupyter.sif" selected>Python 3.8</option>
+                            </select>
+                        </div>
+
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="conda_version">Anaconda Module</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="conda_version" aria-label="Learn about Anaconda Module">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <select name="conda_version" id="conda_version">
+                                <option value="python/miniconda25.5.1" selected>Miniconda 25.5.1</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="jupyter-checkbox jupyter-checkbox--with-help">
+                        <input value="1" type="checkbox" name="new_conda_env" id="new_conda_env">
+                        <div class="jupyter-checkbox__label-wrap">
+                            <label for="new_conda_env">Create a new conda environment?</label>
+                            <button class="jupyter-field-help-trigger" type="button" data-field-help="new_conda_env" aria-label="Learn about creating a new conda environment">
+                                <i class="fas fa-question" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="jupyter-field-grid">
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="conda_env">Environment Path</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="conda_env" aria-label="Learn about Environment Path">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="conda_env" id="conda_env" placeholder="/path/to/environment">
+                        </div>
+
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="modules">Additional Modules</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="modules" aria-label="Learn about Additional Modules">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="modules" id="modules" placeholder="Space separated list">
+                        </div>
+                    </div>
+                </section>
+
+                <details class="jupyter-advanced">
+                    <summary>Advanced Options</summary>
+
+                    <input type="hidden" name="adv_options" value="0">
+
+                    <div class="jupyter-field-grid">
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="py_custom">Python Compiler</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="py_custom" aria-label="Learn about Python Compiler">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="py_custom" id="py_custom" placeholder="/path/to/python">
+                        </div>
+
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="jupyter_config_file">Jupyter Configuration File</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="jupyter_config_file" aria-label="Learn about Jupyter Configuration File">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="jupyter_config_file" id="jupyter_config_file">
+                        </div>
+                    </div>
+
+                    <div class="jupyter-field-grid">
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="extra_jupyter_args">Additional Jupyter Arguments</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="extra_jupyter_args" aria-label="Learn about Additional Jupyter Arguments">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="extra_jupyter_args" id="extra_jupyter_args" placeholder="Space separated list">
+                        </div>
+
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="jupyter_dir">Jupyter Directory</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="jupyter_dir" aria-label="Learn about Jupyter Directory">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="jupyter_dir" id="jupyter_dir">
+                        </div>
+                    </div>
+
+                    <div class="jupyter-field-grid">
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="slurm_args">Additional Slurm Arguments</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="slurm_args" aria-label="Learn about Additional Slurm Arguments">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="slurm_args" id="slurm_args" placeholder="Space separated list">
+                        </div>
+
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="env_custom">Custom Environment Script</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="env_custom" aria-label="Learn about Custom Environment Script">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="env_custom" id="env_custom" placeholder="/path/to/script.sh">
+                        </div>
+                    </div>
+
+                    <div class="jupyter-field">
+                        <div class="jupyter-field-label-row">
+                            <label for="load_commands">Setup Commands (bash syntax)</label>
+                            <button class="jupyter-field-help-trigger" type="button" data-field-help="load_commands" aria-label="Learn about Setup Commands">
+                                <i class="fas fa-question" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <textarea name="load_commands" id="load_commands" placeholder="module load &lt;software-name&gt;&#10;source &quot;$HOME/project_a/setup-env.sh&quot;"></textarea>
+                    </div>
+
+                    <div class="jupyter-field-grid">
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="preamble_script">Preamble Script</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="preamble_script" aria-label="Learn about Preamble Script">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="preamble_script" id="preamble_script">
+                        </div>
+
+                        <div class="jupyter-field">
+                            <div class="jupyter-field-label-row">
+                                <label for="config_name">Save Configuration Preset</label>
+                                <button class="jupyter-field-help-trigger" type="button" data-field-help="config_name" aria-label="Learn about Save Configuration Preset">
+                                    <i class="fas fa-question" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input value="" type="text" name="config_name" id="config_name" placeholder="Save current configuration preset as...">
+                        </div>
+                    </div>
+
+                    <div class="jupyter-checkbox jupyter-advanced__lab-option">
+                        <input type="checkbox" name="mode" id="mode_1" value="1">
+                        <label for="mode_1">Use Jupyter Lab instead</label>
+                    </div>
+                </details>
+
+                <section class="job-summary" aria-label="Current job totals">
+                    <div class="job-summary__item">
+                        <span class="job-summary__label">Jobs Running</span>
+                        <strong class="job-summary__value" data-jobs-running>--</strong>
+                    </div>
+                    <div class="job-summary__item">
+                        <span class="job-summary__label">Jobs Queued</span>
+                        <strong class="job-summary__value" data-jobs-queued>--</strong>
+                    </div>
+                </section>
+
+                <div class="jupyter-actions">
+                    <button class="jupyter-button jupyter-button--secondary" type="button" data-save-preset-open>Save</button>
+                    <button class="jupyter-button jupyter-button--primary" type="submit" name="commit" value="launch" data-launch-job>Launch</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div class="save-preset-modal" data-save-preset-modal hidden>
+        <div class="save-preset-modal__backdrop" data-save-preset-close></div>
+        <section
+            class="save-preset-modal__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="save-preset-modal-title"
+            aria-describedby="save-preset-modal-help"
+        >
+            <form class="save-preset-modal__form" data-save-preset-form>
+                <div class="save-preset-modal__header">
+                    <h2 id="save-preset-modal-title">Save Preset</h2>
+                    <button class="save-preset-modal__close" type="button" aria-label="Close dialog" data-save-preset-close>
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <p id="save-preset-modal-help" class="save-preset-modal__help">
+                    Would you like to save this as a preset?
+                </p>
+
+                <div class="jupyter-field save-preset-modal__field">
+                    <label for="save-preset-job-name">Job Name: <span aria-hidden="true">*</span></label>
+                    <input id="save-preset-job-name" type="text" required data-save-preset-job-name>
+                </div>
+
+                <div class="save-preset-modal__actions">
+                    <button class="jupyter-button jupyter-button--secondary" type="submit" data-save-preset-save>Save</button>
+                    <button class="jupyter-button jupyter-button--primary" type="button" data-save-preset-save-launch>Save and Launch</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div id="jupyter-field-help-modal" class="jupyter-field-help-modal" data-field-help-modal hidden>
+        <div class="jupyter-field-help-modal__backdrop" data-field-help-close></div>
+        <section
+            class="jupyter-field-help-modal__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="jupyter-field-help-modal-title"
+            aria-describedby="jupyter-field-help-modal-description"
+        >
+            <div class="jupyter-field-help-modal__content">
+                <div class="jupyter-field-help-modal__header">
+                    <h2 id="jupyter-field-help-modal-title">Field help</h2>
+                    <button class="jupyter-field-help-modal__close" type="button" aria-label="Close help dialog" data-field-help-close>
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <p id="jupyter-field-help-modal-description" class="jupyter-field-help-modal__description"></p>
+
+                <div class="jupyter-field-help-modal__example">
+                    <strong>Example</strong>
+                    <p data-field-help-example></p>
+                </div>
+
+                <div class="jupyter-field-help-modal__actions">
+                    <button class="jupyter-button jupyter-button--primary" type="button" data-field-help-close>Got it</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</article>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/job-time-labels.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/job-templates.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/package-installer.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jupyter-python-source-warning.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jupyter-field-help.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/jupyter-lab-mode.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/account-preferences-modal.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/save-preset-modal.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/resource-availability.js') }}" defer></script>
+{% endblock %}
