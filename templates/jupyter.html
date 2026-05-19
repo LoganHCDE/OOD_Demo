@@ -5,9 +5,9 @@
 {% block content %}
 <article class="dashboard-shell jupyter-submit-page">
     <nav class="jupyter-breadcrumb" aria-label="Breadcrumb">
-        <a href="/"><i class="fas fa-home" aria-hidden="true"></i> Home</a>
+        <a href="{{ url_for('dashboard') }}"><i class="fas fa-home" aria-hidden="true"></i> Home</a>
         <span class="jupyter-breadcrumb__sep" aria-hidden="true">/</span>
-        <a href="/#section-grid-interactive-apps">Interactive Apps</a>
+        <a href="{{ url_for('dashboard') }}#section-grid-interactive-apps">Interactive Apps</a>
         <span class="jupyter-breadcrumb__sep" aria-hidden="true">/</span>
         <span aria-current="page">Jupyter</span>
     </nav>
