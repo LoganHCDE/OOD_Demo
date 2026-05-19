@@ -30,10 +30,10 @@ from app import app  # noqa: E402
 # Flask route path -> output path under docs/
 EXPORTED_ROUTES: list[tuple[str, Path]] = [
     ("/", Path("index.html")),
-    ("/jupyter/", Path("jupyter", "index.html")),
-    ("/files/", Path("files", "index.html")),
-    ("/job-status/", Path("job-status", "index.html")),
-    ("/partition-usage/", Path("partition-usage", "index.html")),
+    ("/jupyter", Path("jupyter", "index.html")),
+    ("/files", Path("files", "index.html")),
+    ("/job-status", Path("job-status", "index.html")),
+    ("/partition-usage", Path("partition-usage", "index.html")),
 ]
 
 

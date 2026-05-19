@@ -27,7 +27,6 @@
             ],
             events: [
                 { type: "waiting", label: "Waiting", startMinute: 0, endMinute: 12 },
-                { type: "pause", label: "Paused", startMinute: 30, endMinute: 36 },
                 { type: "error", label: "Error", startMinute: 46, endMinute: 50 }
             ]
         },
@@ -52,7 +51,6 @@
             ],
             events: [
                 { type: "waiting", label: "Waiting", startMinute: 0, endMinute: 10 },
-                { type: "pause", label: "Paused", startMinute: 56, endMinute: 64 },
                 { type: "error", label: "Error", startMinute: 72, endMinute: 78 }
             ]
         },
@@ -75,7 +73,6 @@
             ],
             events: [
                 { type: "waiting", label: "Waiting", startMinute: 0, endMinute: 14 },
-                { type: "pause", label: "Paused", startMinute: 34, endMinute: 40 },
                 { type: "error", label: "Error", startMinute: 56, endMinute: 62 }
             ]
         }

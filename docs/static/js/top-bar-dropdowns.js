@@ -90,10 +90,10 @@
             e.stopPropagation();
         });
 
-        panel.querySelectorAll('a[role="menuitem"]').forEach(function (link) {
-            link.addEventListener("click", function (evt) {
+        panel.querySelectorAll('[role="menuitem"]').forEach(function (item) {
+            item.addEventListener("click", function (evt) {
                 closeAll();
-                if (link.getAttribute("href") === "#") {
+                if (item.tagName === "A" && item.getAttribute("href") === "#") {
                     evt.preventDefault();
                 }
             });

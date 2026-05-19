@@ -67,12 +67,7 @@
 
     function launchJob() {
         if (!canLaunch()) return;
-        var m = document.querySelector('meta[name="app-root"]');
-        var root = (m && m.getAttribute("content")) || "/";
-        if (root.slice(-1) !== "/") {
-            root += "/";
-        }
-        window.location.href = new URL("job-status/", window.location.origin + root).href;
+        window.location.href = "/job-status";
     }
 
     openButton.addEventListener("click", function () {

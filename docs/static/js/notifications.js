@@ -34,7 +34,6 @@
     function syncBell() {
         var n = unreadCount();
         if (n === 0) {
-            badge.textContent = "0";
             badge.hidden = true;
             btn.setAttribute("aria-label", "Notifications");
         } else {

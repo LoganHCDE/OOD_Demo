@@ -18,6 +18,15 @@
     --ghost-hover: #e2e8f0;
     --meter-track: #d9dfe8;
     --focus-ring: rgba(0, 108, 142, 0.28);
+    /* Usage pie charts (dashboard tiles, nav dropdown) */
+    --usage-pie-color: #ffc994;
+    --usage-pie-track: #d4dce4;
+    --usage-pie-text: #e8b878;
+    /* Cluster usage gauge arcs and matching center labels */
+    --gauge-color-low: #6dbf8f;
+    --gauge-color-mid: #e4c878;
+    --gauge-color-high: #ed8a8a;
+    --gauge-color-partition: #5a9fc4;
 }
 
 html.dark {
@@ -35,6 +44,9 @@ html.dark {
     --ghost-hover: #30363d;
     --meter-track: #263041;
     --focus-ring: rgba(61, 187, 203, 0.45);
+    --usage-pie-color: #ffb87a;
+    --usage-pie-track: #4a5568;
+    --usage-pie-text: #ffc994;
 }
 
 * {
@@ -182,14 +194,9 @@ a {
     box-shadow: 0 0 0 2px var(--pnnl-orange);
 }
 
-.development-link {
-    font-size: 20px;
-    line-height: 1.2;
-}
-
-.code-mark {
-    font-weight: 600;
-    letter-spacing: -0.05em;
+/* Author `display` on the badge must not override the `hidden` attribute. */
+.notification-bell-badge[hidden] {
+    display: none !important;
 }
 
 .primary-nav .fa-caret-down,
@@ -434,10 +441,10 @@ a {
     max-height: 28px;
     aspect-ratio: 1;
     overflow: hidden;
-    color: var(--text);
+    color: var(--usage-pie-text);
     background:
         radial-gradient(circle, var(--surface) 0 50%, transparent 51%),
-        conic-gradient(#ff9327 0 80%, var(--text) 80% 100%);
+        conic-gradient(var(--usage-pie-color) 0 80%, var(--usage-pie-track) 80% 100%);
     border-radius: 50%;
     font-size: 0.55rem;
     font-weight: 700;
@@ -555,6 +562,10 @@ h1 span {
     height: auto;
     max-height: 104px;
     object-fit: contain;
+}
+
+.ood-logo-img--dark {
+    display: none;
 }
 
 .app-section {
@@ -874,10 +885,10 @@ html.dark .rc-documents-icon__book-inner {
     max-height: 70px;
     aspect-ratio: 1;
     overflow: hidden;
-    color: var(--text);
+    color: var(--usage-pie-text);
     background:
         radial-gradient(circle, var(--surface) 0 50%, transparent 51%),
-        conic-gradient(#ff9327 0 80%, var(--text) 80% 100%);
+        conic-gradient(var(--usage-pie-color) 0 80%, var(--usage-pie-track) 80% 100%);
     border-radius: 50%;
     font-size: 1.25rem;
     font-weight: 400;
@@ -1062,10 +1073,6 @@ html.dark .rc-documents-icon__book-inner {
         box-shadow: 0 0 0 2px var(--pnnl-orange);
     }
 
-    .top-bar-menu-panel .development-link {
-        font-size: 1rem;
-    }
-
     .app-grid {
         gap: 1.25rem 2rem;
         padding-left: 1.5rem;
@@ -1088,10 +1095,6 @@ html.dark .rc-documents-icon__book-inner {
 
     .top-bar-dropdown-trigger--bell {
         min-width: 44px;
-    }
-
-    .development-link {
-        font-size: 1rem;
     }
 
     .app-grid {
@@ -1808,11 +1811,6 @@ html.dark .rc-documents-icon__book-inner {
     stroke: rgba(0, 108, 142, 0.22);
 }
 
-.job-usage-chart__status-band--pause {
-    fill: rgba(233, 124, 0, 0.17);
-    stroke: rgba(233, 124, 0, 0.34);
-}
-
 .job-usage-chart__status-band--error {
     fill: rgba(153, 27, 27, 0.15);
     stroke: rgba(153, 27, 27, 0.36);
@@ -1831,10 +1829,6 @@ html.dark .rc-documents-icon__book-inner {
 
 .job-usage-chart__status-label--waiting {
     fill: #07536c;
-}
-
-.job-usage-chart__status-label--pause {
-    fill: #8a4b00;
 }
 
 .job-usage-chart__status-label--error {
@@ -1875,11 +1869,6 @@ html.dark .rc-documents-icon__book-inner {
     border: 1px solid rgba(0, 108, 142, 0.32);
 }
 
-.job-usage-legend__chip--pause i {
-    background: rgba(233, 124, 0, 0.42);
-    border: 1px solid rgba(233, 124, 0, 0.42);
-}
-
 .job-usage-legend__chip--error i {
     background: rgba(153, 27, 27, 0.34);
     border: 1px solid rgba(153, 27, 27, 0.42);
@@ -1906,32 +1895,19 @@ html.dark .rc-documents-icon__book-inner {
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
-.job-session-card__close {
+.job-session-card__cancel {
     position: absolute;
     top: 1rem;
     right: 1rem;
-    width: 2.65rem;
-    height: 2.65rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #111827;
-    background: #f8fafc;
-    border: 2px solid #dbe3ea;
-    border-radius: 50%;
-    font-size: 1.25rem;
-    cursor: pointer;
-}
-
-.job-session-card__close:hover,
-.job-session-card__close:focus-visible {
-    color: #000000;
-    background: #e2e8f0;
+    min-width: auto;
+    min-height: auto;
+    padding: 0.45rem 1rem;
+    font-size: 0.92rem;
 }
 
 .job-session-card h2 {
     margin: 0;
-    padding-right: 3.25rem;
+    padding-right: 8.5rem;
     font-size: clamp(1.25rem, 2vw, 1.65rem);
     font-weight: 800;
     line-height: 1.25;
@@ -2158,7 +2134,6 @@ html.dark .rc-documents-icon__book-inner {
     gap: 0.75rem;
 }
 
-.job-session-pause,
 .job-session-enter {
     flex: 0 0 auto;
 }
@@ -2219,8 +2194,167 @@ html.dark .rc-documents-icon__book-inner {
     text-decoration: underline;
 }
 
+.account-card__email-notifications {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.account-card__email-legend {
+    padding: 0;
+    margin-bottom: 0.65rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.top-bar-dropdown-item--button {
+    width: 100%;
+    margin: 0;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.user-settings-modal__dialog {
+    width: min(100%, 40rem);
+}
+
+.user-settings-modal__section {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.user-settings-modal__section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.user-settings-modal__section-header h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.user-settings-modal__section-help {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.user-settings-modal__add-billing {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.65rem;
+    color: var(--pnnl-teal);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.user-settings-modal__add-billing:hover,
+.user-settings-modal__add-billing:focus-visible {
+    background: rgba(0, 108, 142, 0.08);
+    outline: none;
+}
+
+.user-settings-billing-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.user-settings-billing-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.75rem;
+    align-items: start;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--raised);
+}
+
+.user-settings-billing-row__default {
+    padding-top: 1.85rem;
+}
+
+.user-settings-billing-row__default input[type="radio"] {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--pnnl-teal);
+}
+
+.user-settings-billing-row__fields {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.user-settings-billing-row__field {
+    display: grid;
+    gap: 0.3rem;
+}
+
+.user-settings-billing-row__field label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+.user-settings-billing-row__field input {
+    width: 100%;
+    padding: 0.45rem 0.55rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+    box-sizing: border-box;
+}
+
+.user-settings-billing-row__remove {
+    margin-top: 1.55rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.user-settings-billing-row__remove:hover:not(:disabled),
+.user-settings-billing-row__remove:focus-visible:not(:disabled) {
+    color: #b42318;
+    border-color: #fecdca;
+    background: #fef3f2;
+    outline: none;
+}
+
+.user-settings-billing-row__remove:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
 .has-save-preset-modal,
 .has-account-preference-modal,
+.has-user-settings-modal,
 .has-field-help-modal,
 .has-job-cancel-modal {
     overflow: hidden;
@@ -2720,8 +2854,8 @@ html.dark .rc-documents-icon__book-inner {
 }
 
 .jupyter-field-help-trigger {
-    width: 1.45rem;
-    height: 1.45rem;
+    width: 1.1rem;
+    height: 1.1rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2731,28 +2865,15 @@ html.dark .rc-documents-icon__book-inner {
     background: var(--pnnl-teal);
     border: 0;
     border-radius: 50%;
-    box-shadow: 0 4px 10px rgba(0, 108, 142, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 108, 142, 0.18);
     cursor: pointer;
-    opacity: 0;
-    transform: translateY(1px) scale(0.92);
-    transition:
-        opacity 0.15s ease,
-        transform 0.15s ease,
-        background 0.15s ease;
+    transition: background 0.15s ease;
 }
 
 .jupyter-field-help-trigger .fa-question {
-    font-size: 0.78rem;
+    font-size: 0.58rem;
     font-weight: 700;
     line-height: 1;
-}
-
-.jupyter-field:hover .jupyter-field-help-trigger,
-.jupyter-field:focus-within .jupyter-field-help-trigger,
-.jupyter-checkbox--with-help:hover .jupyter-field-help-trigger,
-.jupyter-checkbox--with-help:focus-within .jupyter-field-help-trigger {
-    opacity: 1;
-    transform: translateY(1px) scale(1);
 }
 
 .jupyter-field-help-trigger:hover,
@@ -2865,6 +2986,16 @@ html.dark .rc-documents-icon__book-inner {
     line-height: 1.4;
 }
 
+.jupyter-field-note {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.4;
+}
+
+.jupyter-field-note--warning {
+    color: #d9234d;
+}
+
 .jupyter-submit-page ::placeholder {
     color: var(--muted);
     opacity: 1;
@@ -2951,6 +3082,11 @@ html.dark .rc-documents-icon__book-inner {
 .jupyter-advanced[open] {
     display: grid;
     gap: 1.25rem;
+}
+
+.jupyter-advanced__lab-option {
+    margin-top: 1.25rem;
+    padding-top: 0.5rem;
 }
 
 .jupyter-radio-field {
@@ -3500,7 +3636,6 @@ html.dark .rc-documents-icon__book-inner {
 
     .job-session-resource-actions,
     .job-session-actions,
-    .job-session-pause,
     .job-session-enter {
         width: 100%;
     }
@@ -3509,11 +3644,11 @@ html.dark .rc-documents-icon__book-inner {
         justify-content: stretch;
     }
 
-    .job-session-card__close {
+    .job-session-card__cancel {
         top: 0.85rem;
         right: 0.85rem;
-        width: 2.35rem;
-        height: 2.35rem;
+        padding: 0.4rem 0.85rem;
+        font-size: 0.88rem;
     }
 
     .jupyter-submit-page {
@@ -3596,11 +3731,6 @@ html.dark .rc-documents-icon__book-inner {
 
     .jupyter-field-help-modal__actions .jupyter-button {
         width: 100%;
-    }
-
-    .jupyter-field-help-trigger {
-        opacity: 1;
-        transform: translateY(1px) scale(1);
     }
 
     .jupyter-button {
@@ -3775,7 +3905,7 @@ html.dark .rc-documents-icon__book-inner {
 }
 
 .cluster-usage-gauge__arc--available-ring {
-    stroke: rgba(88, 96, 104, 0.55);
+    stroke: rgba(168, 176, 184, 0.65);
 }
 
 .cluster-usage-gauge__segment:hover {
@@ -3785,7 +3915,7 @@ html.dark .rc-documents-icon__book-inner {
 
 .cluster-usage-gauge__segment--available:hover {
     stroke-width: 12;
-    stroke: rgba(55, 62, 68, 0.92);
+    stroke: rgba(140, 148, 156, 0.85);
     filter: brightness(0.98);
 }
 
@@ -3815,7 +3945,7 @@ html.dark .rc-documents-icon__book-inner {
 
     .cluster-usage-gauge__segment--available:hover {
         filter: none;
-        stroke: rgba(55, 62, 68, 0.95);
+        stroke: rgba(140, 148, 156, 0.9);
     }
 
     .cluster-usage-bars__row.is-partition-row-hover .cluster-usage-bars__fill {
@@ -3828,35 +3958,35 @@ html.dark .rc-documents-icon__book-inner {
 }
 
 .cluster-usage-gauge__arc--low {
-    stroke: #2f9f5f;
+    stroke: var(--gauge-color-low);
 }
 
 .cluster-usage-gauge__arc--mid {
-    stroke: #cfa22a;
+    stroke: var(--gauge-color-mid);
 }
 
 .cluster-usage-gauge__arc--high {
-    stroke: #dc4a4a;
+    stroke: var(--gauge-color-high);
 }
 
 .cluster-usage-gauge__arc--partition {
-    stroke: #0b6d9e;
+    stroke: var(--gauge-color-partition);
 }
 
 .cluster-usage-gauge__percent--low {
-    fill: #2f9f5f;
+    fill: var(--gauge-color-low);
 }
 
 .cluster-usage-gauge__percent--mid {
-    fill: #b88900;
+    fill: var(--gauge-color-mid);
 }
 
 .cluster-usage-gauge__percent--high {
-    fill: #c73a3a;
+    fill: var(--gauge-color-high);
 }
 
 .cluster-usage-gauge__percent--partition {
-    fill: #075a82;
+    fill: var(--gauge-color-partition);
 }
 
 .cluster-usage-gauge__available {
@@ -4088,6 +4218,12 @@ html.dark .rc-documents-icon__book-inner {
 }
 
 /* ========== Dark mode: components with fixed light-theme colors ========== */
+/* App tiles: --surface is raised grey; keep only the bordered icon frame visible */
+html.dark .app-card,
+html.dark .app-card__tile {
+    background: transparent;
+}
+
 html.dark .top-bar-kbd {
     background: rgba(255, 255, 255, 0.07);
 }
@@ -4101,20 +4237,12 @@ html.dark .notification-card--maintenance .notification-card__label {
     color: #fdba74;
 }
 
-/* OOD logo PNG has a dark wordmark; light panel for contrast on dark page */
-html.dark .ood-logo {
-    display: inline-block;
-    width: fit-content;
-    max-width: 100%;
-    padding: 0.5rem 0.85rem;
-    background: linear-gradient(180deg, #ffffff 0%, #eef2f7 100%);
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.38);
+html.dark .ood-logo-img--light {
+    display: none;
 }
 
-html.dark .ood-logo-img {
-    filter: none;
+html.dark .ood-logo-img--dark {
+    display: block;
 }
 
 /* --- Dashboard / breadcrumbs / subpages --- */
@@ -4251,18 +4379,6 @@ html.dark .job-session-card {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
-html.dark .job-session-card__close {
-    color: var(--text);
-    background: #1c2430;
-    border-color: var(--border);
-}
-
-html.dark .job-session-card__close:hover,
-html.dark .job-session-card__close:focus-visible {
-    color: var(--text);
-    background: #263041;
-}
-
 html.dark .job-session-resources {
     background: rgba(255, 255, 255, 0.04);
     border-color: var(--border);
@@ -4337,10 +4453,6 @@ html.dark .job-usage-chart__status-label {
 
 html.dark .job-usage-chart__status-label--waiting {
     fill: #7fd4eb;
-}
-
-html.dark .job-usage-chart__status-label--pause {
-    fill: #fdba74;
 }
 
 html.dark .job-usage-chart__status-label--error {
@@ -4474,6 +4586,10 @@ html.dark .jupyter-field-help-trigger:focus-visible {
     background: #0b6578;
 }
 
+html.dark .jupyter-field-note--warning {
+    color: #f87171;
+}
+
 html.dark .jupyter-field input,
 html.dark .jupyter-field select,
 html.dark .jupyter-field textarea,
@@ -4575,6 +4691,17 @@ html.dark .jupyter-field-help-modal__actions {
     border-top-color: var(--border);
 }
 
+html.dark .user-settings-billing-row {
+    background: var(--surface);
+}
+
+html.dark .user-settings-billing-row__remove:hover:not(:disabled),
+html.dark .user-settings-billing-row__remove:focus-visible:not(:disabled) {
+    color: #fda29b;
+    border-color: #912018;
+    background: #55160c;
+}
+
 /* --- Cluster / partition usage --- */
 html.dark .cluster-usage-role-selector {
     background: #141920;
@@ -4625,7 +4752,7 @@ html.dark .cluster-usage-bars__x-axis {
 }
 
 html.dark .cluster-usage-gauge__arc--available-ring {
-    stroke: rgba(139, 156, 176, 0.45);
+    stroke: rgba(139, 156, 176, 0.32);
 }
 
 html.dark .cluster-usage-gauge__track {
@@ -4633,7 +4760,7 @@ html.dark .cluster-usage-gauge__track {
 }
 
 html.dark .cluster-usage-gauge__segment--available:hover {
-    stroke: rgba(200, 210, 220, 0.85);
+    stroke: rgba(200, 210, 220, 0.65);
 }
 
 @media (max-width: 760px) {

@@ -12,17 +12,17 @@
         })();
     </script>
     <meta charset="UTF-8">
-    <meta name="app-root" content="/OOD_Demo/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - PNNL OnDemand</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="/OOD_Demo/static/styles/dashboard.css">
+    <script id="pnnl-user-settings-defaults" type="application/json">{"billing_accounts": [{"id": "ops", "label": "Oceanography Dept."}], "default_billing_account_id": "ops", "user_email": "User@email.com"}</script>
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <header class="top-bar" aria-label="PNNL OnDemand navigation">
-        <a class="brand" href="/OOD_Demo/" aria-label="PNNL OnDemand home">
+        <a class="brand" href="/" aria-label="PNNL OnDemand home">
             <span class="brand-logo" role="img" aria-label="PNNL"></span>
         </a>
 
@@ -43,7 +43,7 @@
                         Terminal
                     </a>
                     
-                    <a class="top-bar-dropdown-item" role="menuitem" title="Files" href="/OOD_Demo/files/">
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Files" href="/files">
                         
                         <i class="far fa-folder fa-fw" aria-hidden="true"></i>
                         
@@ -83,7 +83,7 @@
                         RC Documents
                     </a>
                     
-                    <a class="top-bar-dropdown-item" role="menuitem" title="Partition Usage Status" href="/OOD_Demo/partition-usage/">
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Partition Usage Status" href="/partition-usage">
                         
                         <span class="top-bar-dropdown-usage-icon" aria-hidden="true"><span>80%</span></span>
                         
@@ -162,23 +162,6 @@
                     </ul>
                 </div>
             </div>
-            <div class="top-bar-dropdown">
-                <button type="button" id="development-menu-button" class="development-link top-bar-dropdown-trigger" aria-label="Development" aria-expanded="false" aria-haspopup="true" aria-controls="development-menu">
-                    <span class="code-mark" aria-hidden="true">&lt;/&gt;</span>
-                    <span class="top-bar__label" aria-hidden="true">Development</span>
-                    <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
-                </button>
-                <div id="development-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--end" role="menu" hidden>
-                    <a class="top-bar-dropdown-item" role="menuitem" title="Developer Documentation" href="https://go.osu.edu/ood-app-dev" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-book fa-fw" aria-hidden="true"></i>
-                        Developer Documentation
-                    </a>
-                    <a class="top-bar-dropdown-item" role="menuitem" title="My Sandbox Apps (Development)" href="#">
-                        <i class="fas fa-cog fa-fw" aria-hidden="true"></i>
-                        My Sandbox Apps (Development)
-                    </a>
-                </div>
-            </div>
             <div class="top-bar-dropdown top-bar-dropdown--hoverable">
                 <button
                     type="button"
@@ -193,6 +176,16 @@
                     <span class="top-bar__label" aria-hidden="true">User 1</span>
                 </button>
                 <div id="user-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--end user-menu-panel" role="menu" hidden>
+                    <button
+                        type="button"
+                        class="top-bar-dropdown-item top-bar-dropdown-item--button"
+                        role="menuitem"
+                        data-user-settings-open
+                        aria-label="User settings"
+                    >
+                        <i class="fas fa-gear fa-fw" aria-hidden="true"></i>
+                        User settings
+                    </button>
                     <a class="top-bar-dropdown-item" role="menuitem" href="#" aria-label="Log out">
                         <i class="fas fa-right-from-bracket fa-fw" aria-hidden="true"></i>
                         Log Out
@@ -224,9 +217,15 @@
             <h1 id="dashboard-title">Welcome to <span>PNNL</span></h1>
             <div class="ood-logo">
                 <img
-                    class="ood-logo-img"
+                    class="ood-logo-img ood-logo-img--light"
                     src="/OOD_Demo/static/assets/OpenOndemand%20Logo.png"
                     alt="Open OnDemand"
+                />
+                <img
+                    class="ood-logo-img ood-logo-img--dark"
+                    src="/OOD_Demo/static/assets/Dark%20Mode%20Logo.png"
+                    alt=""
+                    aria-hidden="true"
                 />
             </div>
         </div>
@@ -279,7 +278,7 @@
                 data-app-id="files"
                 data-section-id="open-ondemand-tools"
             >
-                <a class="app-card__stretched-link" href="/OOD_Demo/files/" aria-label="Open Files">
+                <a class="app-card__stretched-link" href="/files" aria-label="Open Files">
                     <span class="visually-hidden">Open Files</span>
                 </a>
                 <div class="app-card__tile">
@@ -359,7 +358,7 @@
                 data-app-id="partition-usage-status"
                 data-section-id="open-ondemand-tools"
             >
-                <a class="app-card__stretched-link" href="/OOD_Demo/partition-usage/" aria-label="Open Partition Usage Status">
+                <a class="app-card__stretched-link" href="/partition-usage" aria-label="Open Partition Usage Status">
                     <span class="visually-hidden">Open Partition Usage Status</span>
                 </a>
                 <div class="app-card__tile">
@@ -423,7 +422,7 @@
                 data-app-id="jupyter"
                 data-section-id="interactive-apps"
             >
-                <a class="app-card__stretched-link" href="/OOD_Demo/jupyter/" aria-label="Open Jupyter Notebook">
+                <a class="app-card__stretched-link" href="/jupyter" aria-label="Open Jupyter Notebook">
                     <span class="visually-hidden">Open Jupyter Notebook</span>
                 </a>
                 <div class="app-card__tile">
@@ -440,39 +439,6 @@
                     <span class="app-icon" aria-hidden="true">
                         
                         <img
-                            class="app-icon-img app-icon-img--sm"
-                            src="/OOD_Demo/static/assets/Jupyter_Notebook_Logo.png"
-                            alt=""
-                        />
-                        
-                    </span>
-                    
-                </div>
-                <span class="app-name">Jupyter Notebook</span>
-            </div>
-            
-            <div
-                class="app-card"
-                data-app-id="jupyter-system"
-                data-section-id="interactive-apps"
-            >
-                <a class="app-card__stretched-link" href="#" aria-label="Open Jupyter Lab">
-                    <span class="visually-hidden">Open Jupyter Lab</span>
-                </a>
-                <div class="app-card__tile">
-                    <button
-                        type="button"
-                        class="pin"
-                        aria-pressed="false"
-                        aria-label="Add Jupyter Lab to favorites"
-                    >
-                        <i class="far fa-star" aria-hidden="true"></i>
-                    </button>
-
-                    
-                    <span class="app-icon" aria-hidden="true">
-                        
-                        <img
                             class="app-icon-img"
                             src="/OOD_Demo/static/assets/Jupyter.svg"
                             alt=""
@@ -481,7 +447,7 @@
                     </span>
                     
                 </div>
-                <span class="app-name">Jupyter Lab</span>
+                <span class="app-name">Jupyter Notebook</span>
             </div>
             
             <div
@@ -631,7 +597,7 @@
                 data-app-id="active-jobs"
                 data-section-id="jobs"
             >
-                <a class="app-card__stretched-link" href="/OOD_Demo/job-status/" aria-label="Open Active Jobs">
+                <a class="app-card__stretched-link" href="/job-status" aria-label="Open Active Jobs">
                     <span class="visually-hidden">Open Active Jobs</span>
                 </a>
                 <div class="app-card__tile">
@@ -686,9 +652,64 @@
 </section>
 
     </main>
+
+    <div class="account-preference-modal user-settings-modal" data-user-settings-modal hidden>
+        <div class="account-preference-modal__backdrop" data-user-settings-close></div>
+        <section
+            class="account-preference-modal__dialog user-settings-modal__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="user-settings-modal-title"
+            aria-describedby="user-settings-modal-help"
+        >
+            <form class="account-preference-modal__form user-settings-modal__form" data-user-settings-form>
+                <div class="account-preference-modal__header">
+                    <h2 id="user-settings-modal-title">User settings</h2>
+                    <button class="account-preference-modal__close" type="button" aria-label="Close dialog" data-user-settings-close>
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <p id="user-settings-modal-help" class="account-preference-modal__help">
+                    Saved preferences apply across OnDemand pages, including interactive app session forms.
+                </p>
+
+                <div class="jupyter-field account-preference-modal__field user-settings-modal__field">
+                    <label for="user-settings-email">User email</label>
+                    <input
+                        id="user-settings-email"
+                        type="email"
+                        autocomplete="email"
+                        required
+                        data-user-settings-email
+                    >
+                </div>
+
+                <section class="user-settings-modal__section" data-user-settings-section-billing aria-labelledby="user-settings-billing-title">
+                    <div class="user-settings-modal__section-header">
+                        <h3 id="user-settings-billing-title">Billing accounts</h3>
+                        <button type="button" class="user-settings-modal__add-billing" data-user-settings-add-billing>
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                            Add billing account
+                        </button>
+                    </div>
+                    <p class="user-settings-modal__section-help">Select a default account for new sessions. Account ID is submitted with job forms.</p>
+                    <div class="user-settings-billing-list" data-user-settings-billing-list></div>
+                </section>
+
+                <div class="account-preference-modal__actions">
+                    <button class="jupyter-button jupyter-button--secondary" type="button" data-user-settings-close>Cancel</button>
+                    <button class="jupyter-button jupyter-button--primary" type="submit">Save</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
     
 <script src="/OOD_Demo/static/js/app-favorites.js" defer></script>
 
+    <script src="/OOD_Demo/static/js/user-settings-storage.js" defer></script>
+    <script src="/OOD_Demo/static/js/user-settings.js" defer></script>
     <script src="/OOD_Demo/static/js/theme-toggle.js" defer></script>
     <script src="/OOD_Demo/static/js/top-bar-mobile-menu.js" defer></script>
     <script src="/OOD_Demo/static/js/top-bar-dropdowns.js" defer></script>
