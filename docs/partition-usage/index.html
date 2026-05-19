@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem("pnnl-ondemand-theme") === "dark") {
+                    document.documentElement.classList.add("dark");
+                }
+            } catch (e) { /* ignore */ }
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="app-root" content="/OOD_Demo/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partition Usage Statistics | PNNL OnDemand Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/OOD_Demo/static/styles/dashboard.css">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="top-bar" aria-label="PNNL OnDemand navigation">
+        <a class="brand" href="/OOD_Demo/" aria-label="PNNL OnDemand home">
+            <span class="brand-logo" role="img" aria-label="PNNL"></span>
+        </a>
+
+        <div id="top-bar-menu-panel" class="top-bar-menu-panel" aria-label="Site menu">
+            <nav class="primary-nav" aria-label="Primary navigation">
+            <div class="top-bar-dropdown">
+                <button type="button" id="tools-menu-button" class="top-bar-dropdown-trigger" aria-label="Tools" aria-expanded="false" aria-haspopup="true" aria-controls="tools-menu">
+                    <i class="fas fa-screwdriver-wrench fa-fw" aria-hidden="true"></i>
+                    <span class="top-bar__label" aria-hidden="true">Tools</span>
+                    <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
+                </button>
+                <div id="tools-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--start" role="menu" hidden>
+                    
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Terminal" href="#">
+                        
+                        <i class="fas fa-terminal fa-fw" aria-hidden="true"></i>
+                        
+                        Terminal
+                    </a>
+                    
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Files" href="/OOD_Demo/files/">
+                        
+                        <i class="far fa-folder fa-fw" aria-hidden="true"></i>
+                        
+                        Files
+                    </a>
+                    
+                    <a class="top-bar-dropdown-item" role="menuitem" title="RC Documents" href="#">
+                        
+                        
+                        
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="93"
+    height="83"
+    viewBox="0 0 93 83"
+    fill="none"
+    class="rc-documents-icon top-bar-dropdown-app-img"
+    aria-hidden="true"
+    focusable="false"
+>
+    <path
+        class="rc-documents-icon__globe"
+        d="M32.8125 0C26.3228 0 19.9789 1.92442 14.5829 5.5299C9.18688 9.13539 4.98122 14.26 2.49772 20.2557C0.014217 26.2514 -0.63558 32.8489 0.630498 39.2139C1.89658 45.5789 5.02166 51.4255 9.61057 56.0144C14.1995 60.6033 20.0461 63.7284 26.4111 64.9945C32.7761 66.2606 39.3736 65.6108 45.3693 63.1273C51.365 60.6438 56.4896 56.4381 60.0951 51.0421C63.7006 45.6462 65.625 39.3022 65.625 32.8125C65.625 24.1101 62.168 15.7641 56.0145 9.61056C49.8609 3.45702 41.5149 0 32.8125 0ZM60.9375 30.4688H46.875C46.6014 21.8369 44.3652 13.3808 40.336 5.74219C45.8873 7.2607 50.8391 10.4457 54.5232 14.8674C58.2072 19.2891 60.446 24.7345 60.9375 30.4688ZM32.8125 60.9375C32.2897 60.9726 31.7651 60.9726 31.2422 60.9375C26.3866 53.1942 23.6918 44.2925 23.4375 35.1562H42.1875C41.9543 44.2859 39.284 53.1871 34.4531 60.9375C33.9069 60.9758 33.3587 60.9758 32.8125 60.9375ZM23.4375 30.4688C23.6707 21.3391 26.3411 12.4379 31.1719 4.6875C32.2155 4.57023 33.2689 4.57023 34.3125 4.6875C39.1928 12.4237 41.9121 21.3259 42.1875 30.4688H23.4375ZM25.2188 5.74219C21.214 13.3867 19.0019 21.8425 18.75 30.4688H4.68752C5.179 24.7345 7.41784 19.2891 11.1019 14.8674C14.7859 10.4457 19.7377 7.2607 25.2891 5.74219H25.2188ZM4.8047 35.1562H18.8672C19.1118 43.7807 21.3159 52.2364 25.3125 59.8828C19.7786 58.348 14.8471 55.1559 11.181 50.7356C7.51485 46.3152 5.28973 40.8785 4.8047 35.1562ZM40.336 59.8828C44.3652 52.2442 46.6014 43.7881 46.875 35.1562H60.9375C60.446 40.8905 58.2072 46.3359 54.5232 50.7576C50.8391 55.1793 45.8873 58.3643 40.336 59.8828Z"
+    />
+    <path
+        class="rc-documents-icon__book"
+        d="M62.75 40.2266C59.2217 38.542 54.29 37.7168 47.6875 37.6875C47.0648 37.679 46.4543 37.8606 45.9375 38.208C45.5133 38.4947 45.166 38.8813 44.9262 39.3338C44.6865 39.7862 44.5616 40.2907 44.5625 40.8027V68.7422C44.5625 70.6309 45.9063 72.0557 47.6875 72.0557C54.6279 72.0557 61.5898 72.7041 65.7598 76.6455C65.8168 76.6997 65.8885 76.7359 65.966 76.7496C66.0434 76.7634 66.1232 76.7541 66.1954 76.7229C66.2676 76.6916 66.329 76.6399 66.3721 76.5741C66.4151 76.5082 66.4379 76.4312 66.4375 76.3525V43.4316C66.4376 43.2095 66.3901 42.99 66.2981 42.7878C66.2061 42.5857 66.0718 42.4056 65.9043 42.2598C64.9491 41.4432 63.8881 40.7593 62.75 40.2266ZM90.0625 38.2051C89.5454 37.8585 88.9349 37.678 88.3125 37.6875C81.71 37.7168 76.7783 38.5381 73.25 40.2266C72.1119 40.7583 71.0506 41.4409 70.0947 42.2559C69.9275 42.4019 69.7935 42.582 69.7017 42.7842C69.6099 42.9863 69.5625 43.2057 69.5625 43.4277V76.3506C69.5625 76.4262 69.5847 76.5001 69.6265 76.5631C69.6683 76.626 69.7278 76.6753 69.7975 76.7046C69.8672 76.7339 69.9439 76.742 70.0182 76.7278C70.0924 76.7137 70.1608 76.6779 70.2148 76.625C72.7217 74.1348 77.1211 72.0527 88.3164 72.0537C89.1452 72.0537 89.9401 71.7245 90.5261 71.1384C91.1122 70.5524 91.4414 69.7575 91.4414 68.9287V40.8037C91.4426 40.2906 91.3174 39.7852 91.0769 39.332C90.8364 38.8788 90.488 38.4917 90.0625 38.2051Z"
+    />
+    <path
+        class="rc-documents-icon__book-inner"
+        d="M63.474 42.6781C60.4324 41.2259 56.181 40.5145 50.4891 40.4893C49.9523 40.482 49.4261 40.6385 48.9805 40.938C48.6148 41.1852 48.3154 41.5184 48.1087 41.9085C47.902 42.2985 47.7944 42.7334 47.7952 43.1748V67.2605C47.7952 68.8887 48.9536 70.117 50.4891 70.117C56.4723 70.117 62.4739 70.676 66.0687 74.0738C66.1178 74.1204 66.1797 74.1517 66.2464 74.1635C66.3132 74.1754 66.382 74.1674 66.4442 74.1404C66.5065 74.1135 66.5594 74.0689 66.5965 74.0122C66.6336 73.9554 66.6533 73.889 66.6529 73.8212V45.4411C66.653 45.2496 66.612 45.0604 66.5327 44.8861C66.4534 44.7118 66.3377 44.5566 66.1933 44.4309C65.3699 43.7269 64.4552 43.1374 63.474 42.6781ZM87.0193 40.9354C86.5735 40.6367 86.0472 40.4811 85.5107 40.4893C79.8188 40.5145 75.5674 41.2225 72.5258 42.6781C71.5447 43.1365 70.6298 43.7249 69.8057 44.4275C69.6616 44.5534 69.5461 44.7087 69.4669 44.8829C69.3878 45.0572 69.3469 45.2464 69.3469 45.4377V73.8195C69.3469 73.8847 69.3661 73.9484 69.4021 74.0027C69.4381 74.057 69.4894 74.0994 69.5495 74.1247C69.6095 74.1499 69.6757 74.1569 69.7397 74.1447C69.8037 74.1325 69.8627 74.1017 69.9093 74.0561C72.0703 71.9093 75.8629 70.1145 85.5141 70.1153C86.2285 70.1153 86.9138 69.8315 87.419 69.3263C87.9242 68.821 88.208 68.1358 88.208 67.4213V43.1756C88.209 42.7334 88.1011 42.2976 87.8938 41.9069C87.6864 41.5162 87.3861 41.1826 87.0193 40.9354Z"
+    />
+</svg>
+
+                        
+                        
+                        RC Documents
+                    </a>
+                    
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Partition Usage Status" href="/OOD_Demo/partition-usage/">
+                        
+                        <span class="top-bar-dropdown-usage-icon" aria-hidden="true"><span>80%</span></span>
+                        
+                        Partition Usage Status
+                    </a>
+                    
+                </div>
+            </div>
+            <div class="top-bar-dropdown">
+                <button type="button" id="active-menu-button" class="top-bar-dropdown-trigger" aria-label="Active jobs" aria-expanded="false" aria-haspopup="true" aria-controls="active-menu">
+                    <i class="fas fa-list-check fa-fw" aria-hidden="true"></i>
+                    <span class="top-bar__label" aria-hidden="true">Active</span>
+                    <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
+                </button>
+                <div id="active-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--start" role="menu" hidden>
+                    
+                        <span class="top-bar-dropdown-empty" role="menuitem">No active jobs present</span>
+                    
+                </div>
+            </div>
+            <!-- Help menu URLs mirror Open-OnDemand-UW-UX-UI-Demo reference base.html -->
+            <div class="top-bar-dropdown">
+                <button type="button" id="help-menu-button" class="help-link top-bar-dropdown-trigger" aria-label="Help" aria-expanded="false" aria-haspopup="true" aria-controls="help-menu">
+                    <i class="fas fa-question" aria-hidden="true"></i>
+                    <span class="top-bar__label" aria-hidden="true">Help</span>
+                    <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
+                </button>
+                <div id="help-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--start" role="menu" hidden>
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Online Documentation" href="https://hpc.tanuki-pages.pnnl.gov/user-docs/how-tos/access/openondemand.html" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-info-circle fa-fw" aria-hidden="true"></i>
+                        Online Documentation
+                    </a>
+                </div>
+            </div>
+            </nav>
+
+            <nav class="utility-nav" aria-label="Utility navigation">
+            <div class="top-bar-dropdown">
+                <button
+                    type="button"
+                    id="notifications-menu-button"
+                    class="top-bar-dropdown-trigger top-bar-dropdown-trigger--bell"
+                    aria-label="Notifications, 2 unread"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="notifications-panel"
+                >
+                    <i class="fas fa-bell" aria-hidden="true"></i>
+                    <span class="notification-bell-badge" aria-hidden="true">2</span>
+                </button>
+                <div
+                    id="notifications-panel"
+                    class="top-bar-dropdown-panel top-bar-dropdown-panel--end notifications-dropdown"
+                    role="region"
+                    aria-labelledby="notifications-dropdown-title"
+                    hidden
+                >
+                    <div class="notifications-dropdown-header">
+                        <h2 id="notifications-dropdown-title" class="notifications-dropdown-title">Notifications</h2>
+                    </div>
+                    <ul class="notifications-list">
+                        <li class="notification-card notification-card--maintenance">
+                            <span class="notification-card__label">System maintenance</span>
+                            <p class="notification-card__text">
+                                Scheduled maintenance Sunday 2:00–6:00 AM Pacific. Batch jobs will continue to run; interactive
+                                OnDemand sessions may be interrupted briefly during the window.
+                            </p>
+                        </li>
+                        <li class="notification-card">
+                            <span class="notification-card__label">Cluster usage</span>
+                            <p class="notification-card__text">
+                                Swift partition is at elevated utilization. Consider shorter walltimes or an alternate partition if
+                                your job queues longer than usual.
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="top-bar-dropdown">
+                <button type="button" id="development-menu-button" class="development-link top-bar-dropdown-trigger" aria-label="Development" aria-expanded="false" aria-haspopup="true" aria-controls="development-menu">
+                    <span class="code-mark" aria-hidden="true">&lt;/&gt;</span>
+                    <span class="top-bar__label" aria-hidden="true">Development</span>
+                    <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
+                </button>
+                <div id="development-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--end" role="menu" hidden>
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Developer Documentation" href="https://go.osu.edu/ood-app-dev" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-book fa-fw" aria-hidden="true"></i>
+                        Developer Documentation
+                    </a>
+                    <a class="top-bar-dropdown-item" role="menuitem" title="My Sandbox Apps (Development)" href="#">
+                        <i class="fas fa-cog fa-fw" aria-hidden="true"></i>
+                        My Sandbox Apps (Development)
+                    </a>
+                </div>
+            </div>
+            <div class="top-bar-dropdown top-bar-dropdown--hoverable">
+                <button
+                    type="button"
+                    id="user-menu-button"
+                    class="top-bar-dropdown-trigger top-bar-dropdown-trigger--user"
+                    aria-label="Account menu, signed in as User 1"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="user-menu"
+                >
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span class="top-bar__label" aria-hidden="true">User 1</span>
+                </button>
+                <div id="user-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--end user-menu-panel" role="menu" hidden>
+                    <a class="top-bar-dropdown-item" role="menuitem" href="#" aria-label="Log out">
+                        <i class="fas fa-right-from-bracket fa-fw" aria-hidden="true"></i>
+                        Log Out
+                    </a>
+                </div>
+            </div>
+            </nav>
+        </div>
+
+        <button
+            type="button"
+            id="top-bar-menu-toggle"
+            class="top-bar-menu-toggle"
+            aria-expanded="false"
+            aria-controls="top-bar-menu-panel"
+            aria-label="Open menu"
+        >
+            <i class="fas fa-bars top-bar-menu-toggle__icon-open" aria-hidden="true"></i>
+            <i class="fas fa-xmark top-bar-menu-toggle__icon-close" aria-hidden="true"></i>
+        </button>
+        <div class="top-bar-menu-backdrop" id="top-bar-menu-backdrop" hidden aria-hidden="true"></div>
+    </header>
+
+    <main id="main-content">
+        
+
+<article class="dashboard-shell cluster-usage-page" data-cluster-usage-page data-cluster-usage-mode="user" aria-label="Partition usage statistics">
+    <div class="cluster-usage-tooltip" id="cluster-usage-tooltip" role="tooltip" hidden></div>
+    <nav class="jupyter-breadcrumb" aria-label="Breadcrumb">
+        <a href="/OOD_Demo/"><i class="fas fa-home" aria-hidden="true"></i> Home</a>
+        <span class="jupyter-breadcrumb__sep" aria-hidden="true">/</span>
+        <span aria-current="page">Partition usage status</span>
+    </nav>
+
+    <header class="cluster-usage-page__masthead">
+        <h1 class="cluster-usage-page__title">Partition Usage Statistics</h1>
+
+        <div class="cluster-usage-role-selector" role="group" aria-label="View statistics as user or administrator">
+            <button
+                type="button"
+                class="cluster-usage-role-selector__button is-selected"
+                data-cluster-usage-role="user"
+                aria-pressed="true"
+            >
+                <i class="fas fa-user" aria-hidden="true"></i>
+                User
+            </button>
+            <button
+                type="button"
+                class="cluster-usage-role-selector__button"
+                data-cluster-usage-role="admin"
+                aria-pressed="false"
+            >
+                Admin
+            </button>
+        </div>
+    </header>
+
+    <div class="cluster-usage-page__body" data-cluster-usage-panel="user" aria-hidden="false">
+        <section class="cluster-usage-gauges" aria-labelledby="cluster-usage-gauges-heading">
+            <h2 id="cluster-usage-gauges-heading" class="visually-hidden">Resource availability gauges</h2>
+
+            
+                
+                
+                
+                
+
+                <div class="cluster-usage-gauge">
+                    <h3 class="cluster-usage-gauge__title">Node Status</h3>
+                    <div class="cluster-usage-gauge__figure">
+                        <svg
+                            viewBox="0 0 120 120"
+                            class="cluster-usage-gauge__svg"
+                            role="img"
+                            aria-label="Node Status, 40% used. Available 222."
+                        >
+                            <g transform="rotate(-90 60 60)" aria-hidden="true">
+                                <circle class="cluster-usage-gauge__track" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-dasharray="326.73 326.73"/>
+                                
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--used cluster-usage-gauge__arc cluster-usage-gauge__arc--low"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="130.69 326.73"
+                                        data-gauge-title="Node Status"
+                                        data-usage-pct="40"
+                                        data-available="222"
+                                        data-segment="used"
+                                    />
+                                
+                                
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--available cluster-usage-gauge__arc--available-ring"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="196.04 326.73"
+                                        stroke-dashoffset="-130.69"
+                                        data-gauge-title="Node Status"
+                                        data-usage-pct="40"
+                                        data-available="222"
+                                        data-segment="available"
+                                    />
+                                
+                            </g>
+                            <text
+                                x="60"
+                                y="61"
+                                class="cluster-usage-gauge__percent cluster-usage-gauge__percent--low"
+                                dominant-baseline="central"
+                                text-anchor="middle"
+                                aria-hidden="true"
+                            >40%</text>
+                        </svg>
+                    </div>
+                    
+                    <p class="cluster-usage-gauge__available">Available: <strong>222</strong></p>
+                    
+                </div>
+            
+                
+                
+                
+                
+
+                <div class="cluster-usage-gauge">
+                    <h3 class="cluster-usage-gauge__title">Core Status</h3>
+                    <div class="cluster-usage-gauge__figure">
+                        <svg
+                            viewBox="0 0 120 120"
+                            class="cluster-usage-gauge__svg"
+                            role="img"
+                            aria-label="Core Status, 60% used. Available 14k."
+                        >
+                            <g transform="rotate(-90 60 60)" aria-hidden="true">
+                                <circle class="cluster-usage-gauge__track" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-dasharray="326.73 326.73"/>
+                                
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--used cluster-usage-gauge__arc cluster-usage-gauge__arc--mid"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="196.04 326.73"
+                                        data-gauge-title="Core Status"
+                                        data-usage-pct="60"
+                                        data-available="14k"
+                                        data-segment="used"
+                                    />
+                                
+                                
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--available cluster-usage-gauge__arc--available-ring"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="130.69 326.73"
+                                        stroke-dashoffset="-196.04"
+                                        data-gauge-title="Core Status"
+                                        data-usage-pct="60"
+                                        data-available="14k"
+                                        data-segment="available"
+                                    />
+                                
+                            </g>
+                            <text
+                                x="60"
+                                y="61"
+                                class="cluster-usage-gauge__percent cluster-usage-gauge__percent--mid"
+                                dominant-baseline="central"
+                                text-anchor="middle"
+                                aria-hidden="true"
+                            >60%</text>
+                        </svg>
+                    </div>
+                    
+                    <p class="cluster-usage-gauge__available">Available: <strong>14k</strong></p>
+                    
+                </div>
+            
+                
+                
+                
+                
+
+                <div class="cluster-usage-gauge">
+                    <h3 class="cluster-usage-gauge__title">GPU Status</h3>
+                    <div class="cluster-usage-gauge__figure">
+                        <svg
+                            viewBox="0 0 120 120"
+                            class="cluster-usage-gauge__svg"
+                            role="img"
+                            aria-label="GPU Status, 85% used. Available 132."
+                        >
+                            <g transform="rotate(-90 60 60)" aria-hidden="true">
+                                <circle class="cluster-usage-gauge__track" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-dasharray="326.73 326.73"/>
+                                
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--used cluster-usage-gauge__arc cluster-usage-gauge__arc--high"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="277.72 326.73"
+                                        data-gauge-title="GPU Status"
+                                        data-usage-pct="85"
+                                        data-available="132"
+                                        data-segment="used"
+                                    />
+                                
+                                
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--available cluster-usage-gauge__arc--available-ring"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="49.01 326.73"
+                                        stroke-dashoffset="-277.72"
+                                        data-gauge-title="GPU Status"
+                                        data-usage-pct="85"
+                                        data-available="132"
+                                        data-segment="available"
+                                    />
+                                
+                            </g>
+                            <text
+                                x="60"
+                                y="61"
+                                class="cluster-usage-gauge__percent cluster-usage-gauge__percent--high"
+                                dominant-baseline="central"
+                                text-anchor="middle"
+                                aria-hidden="true"
+                            >85%</text>
+                        </svg>
+                    </div>
+                    
+                    <p class="cluster-usage-gauge__available">Available: <strong>132</strong></p>
+                    
+                </div>
+            
+                
+                
+                
+                
+
+                <div class="cluster-usage-gauge">
+                    <h3 class="cluster-usage-gauge__title">Overall Partition Space</h3>
+                    <div class="cluster-usage-gauge__figure">
+                        <svg
+                            viewBox="0 0 120 120"
+                            class="cluster-usage-gauge__svg"
+                            role="img"
+                            aria-label="Overall Partition Space, 48% used. 0 full partitions."
+                        >
+                            <g transform="rotate(-90 60 60)" aria-hidden="true">
+                                <circle class="cluster-usage-gauge__track" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-dasharray="326.73 326.73"/>
+                                
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--used cluster-usage-gauge__arc cluster-usage-gauge__arc--partition"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="156.83 326.73"
+                                        data-gauge-title="Overall Partition Space"
+                                        data-usage-pct="48"
+                                        data-full-partitions="0"
+                                        data-segment="used"
+                                    />
+                                
+                                
+                                    <circle
+                                        class="cluster-usage-gauge__segment cluster-usage-gauge__segment--available cluster-usage-gauge__arc--available-ring"
+                                        cx="60"
+                                        cy="60"
+                                        r="52"
+                                        fill="none"
+                                        stroke-width="11"
+                                        stroke-linecap="butt"
+                                        stroke-dasharray="169.9 326.73"
+                                        stroke-dashoffset="-156.83"
+                                        data-gauge-title="Overall Partition Space"
+                                        data-usage-pct="48"
+                                        data-full-partitions="0"
+                                        data-segment="available"
+                                    />
+                                
+                            </g>
+                            <text
+                                x="60"
+                                y="61"
+                                class="cluster-usage-gauge__percent cluster-usage-gauge__percent--partition"
+                                dominant-baseline="central"
+                                text-anchor="middle"
+                                aria-hidden="true"
+                            >48%</text>
+                        </svg>
+                    </div>
+                    
+                    <p class="cluster-usage-gauge__available">Full partitions: <strong>0</strong></p>
+                    
+                </div>
+            
+        </section>
+
+        <section class="cluster-usage-partition-card" aria-labelledby="partition-status-heading">
+            <h2 id="partition-status-heading" class="cluster-usage-partition-card__title">Partition status</h2>
+
+            <div class="cluster-usage-bars" role="img" aria-label="Partition usage by percent, from 10 to 100">
+                <div class="cluster-usage-bars__label-col" role="presentation">
+                    
+                        
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="0"
+                            data-partition-label="slurm"
+                            data-usage-pct="38"
+                            data-tier="low"
+                        >slurm</span>
+                    
+                        
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="1"
+                            data-partition-label="short"
+                            data-usage-pct="72"
+                            data-tier="mid"
+                        >short</span>
+                    
+                        
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="2"
+                            data-partition-label="a100"
+                            data-usage-pct="55"
+                            data-tier="mid"
+                        >a100</span>
+                    
+                        
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="3"
+                            data-partition-label="a100_shared"
+                            data-usage-pct="68"
+                            data-tier="mid"
+                        >a100_shared</span>
+                    
+                        
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="4"
+                            data-partition-label="h100"
+                            data-usage-pct="88"
+                            data-tier="high"
+                        >h100</span>
+                    
+                        
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="5"
+                            data-partition-label="h100_shared"
+                            data-usage-pct="61"
+                            data-tier="mid"
+                        >h100_shared</span>
+                    
+                        
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="6"
+                            data-partition-label="fat"
+                            data-usage-pct="42"
+                            data-tier="low"
+                        >fat</span>
+                    
+                        
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="7"
+                            data-partition-label="fat_shared"
+                            data-usage-pct="79"
+                            data-tier="high"
+                        >fat_shared</span>
+                    
+                        
+                        <span
+                            class="cluster-usage-bars__label"
+                            data-partition-row="8"
+                            data-partition-label="custom"
+                            data-usage-pct="15"
+                            data-tier="low"
+                        >custom</span>
+                    
+                </div>
+
+                <div class="cluster-usage-bars__plot-col" role="presentation">
+                    <div class="cluster-usage-bars__plot">
+                        <div class="cluster-usage-bars__v-grid" aria-hidden="true">
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                                <span class="cluster-usage-bars__v-cell"></span>
+                            
+                        </div>
+
+                        <div class="cluster-usage-bars__tracks">
+                            
+                                
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="0"
+                                    data-partition-label="slurm"
+                                    data-usage-pct="38"
+                                    data-tier="low"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--low" style="width: 38%;"></span>
+                                    </div>
+                                </div>
+                            
+                                
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="1"
+                                    data-partition-label="short"
+                                    data-usage-pct="72"
+                                    data-tier="mid"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--mid" style="width: 72%;"></span>
+                                    </div>
+                                </div>
+                            
+                                
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="2"
+                                    data-partition-label="a100"
+                                    data-usage-pct="55"
+                                    data-tier="mid"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--mid" style="width: 55%;"></span>
+                                    </div>
+                                </div>
+                            
+                                
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="3"
+                                    data-partition-label="a100_shared"
+                                    data-usage-pct="68"
+                                    data-tier="mid"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--mid" style="width: 68%;"></span>
+                                    </div>
+                                </div>
+                            
+                                
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="4"
+                                    data-partition-label="h100"
+                                    data-usage-pct="88"
+                                    data-tier="high"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--high" style="width: 88%;"></span>
+                                    </div>
+                                </div>
+                            
+                                
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="5"
+                                    data-partition-label="h100_shared"
+                                    data-usage-pct="61"
+                                    data-tier="mid"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--mid" style="width: 61%;"></span>
+                                    </div>
+                                </div>
+                            
+                                
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="6"
+                                    data-partition-label="fat"
+                                    data-usage-pct="42"
+                                    data-tier="low"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--low" style="width: 42%;"></span>
+                                    </div>
+                                </div>
+                            
+                                
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="7"
+                                    data-partition-label="fat_shared"
+                                    data-usage-pct="79"
+                                    data-tier="high"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--high" style="width: 79%;"></span>
+                                    </div>
+                                </div>
+                            
+                                
+                                <div
+                                    class="cluster-usage-bars__row"
+                                    tabindex="0"
+                                    data-partition-row="8"
+                                    data-partition-label="custom"
+                                    data-usage-pct="15"
+                                    data-tier="low"
+                                >
+                                    <div class="cluster-usage-bars__track">
+                                        <span class="cluster-usage-bars__fill cluster-usage-bars__fill--low" style="width: 15%;"></span>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="cluster-usage-bars__x-axis" aria-hidden="true">
+                        
+                            <span class="cluster-usage-bars__x-tick">10%</span>
+                        
+                            <span class="cluster-usage-bars__x-tick">20%</span>
+                        
+                            <span class="cluster-usage-bars__x-tick">30%</span>
+                        
+                            <span class="cluster-usage-bars__x-tick">40%</span>
+                        
+                            <span class="cluster-usage-bars__x-tick">50%</span>
+                        
+                            <span class="cluster-usage-bars__x-tick">60%</span>
+                        
+                            <span class="cluster-usage-bars__x-tick">70%</span>
+                        
+                            <span class="cluster-usage-bars__x-tick">80%</span>
+                        
+                            <span class="cluster-usage-bars__x-tick">90%</span>
+                        
+                            <span class="cluster-usage-bars__x-tick">100%</span>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <section class="job-summary job-summary--triple" aria-label="Cluster job totals">
+                <div class="job-summary__item">
+                    <span class="job-summary__label">Jobs Running</span>
+                    <strong class="job-summary__value">1,247</strong>
+                </div>
+                <div class="job-summary__item">
+                    <span class="job-summary__label">Jobs Queued</span>
+                    <strong class="job-summary__value">14</strong>
+                </div>
+                <div class="job-summary__item">
+                    <span class="job-summary__label">Avg. time in queue</span>
+                    <strong class="job-summary__value">22 min</strong>
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <div
+        class="cluster-usage-page__admin-panel"
+        data-cluster-usage-panel="admin"
+        hidden
+        aria-hidden="true"
+        aria-label="Administrator view"
+    ></div>
+</article>
+
+    </main>
+    
+<script src="/OOD_Demo/static/js/partition_usage.js" defer></script>
+
+    <script src="/OOD_Demo/static/js/theme-toggle.js" defer></script>
+    <script src="/OOD_Demo/static/js/top-bar-mobile-menu.js" defer></script>
+    <script src="/OOD_Demo/static/js/top-bar-dropdowns.js" defer></script>
+    <script src="/OOD_Demo/static/js/notifications.js" defer></script>
+</body>
+</html>
