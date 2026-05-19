@@ -1,0 +1,50 @@
+{# Compact cluster usage donut (Node Status style) for dashboard / nav app tiles. #}
+{% macro cluster_usage_gauge_icon(usage_pct, tier, extra_classes="", gauge_circumference=326.73) %}
+{% set C = gauge_circumference %}
+{% set arc_len = (C * usage_pct / 100) | round(2) %}
+{% set rem_len = (C * (100 - usage_pct) / 100) | round(2) %}
+{% set gauge_style = 'high' if usage_pct >= 75 else tier %}
+<svg
+    viewBox="0 0 120 120"
+    class="cluster-usage-gauge-icon {{ extra_classes }}"
+    role="img"
+    aria-hidden="true"
+    focusable="false"
+>
+    <g transform="rotate(-90 60 60)">
+        <circle class="cluster-usage-gauge__track" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-dasharray="{{ C }} {{ C }}"/>
+        {% if arc_len > 0 %}
+        <circle
+            class="cluster-usage-gauge__arc cluster-usage-gauge__arc--{{ gauge_style }}"
+            cx="60"
+            cy="60"
+            r="52"
+            fill="none"
+            stroke-width="11"
+            stroke-linecap="butt"
+            stroke-dasharray="{{ arc_len }} {{ C }}"
+        />
+        {% endif %}
+        {% if rem_len > 0 %}
+        <circle
+            class="cluster-usage-gauge__arc--available-ring"
+            cx="60"
+            cy="60"
+            r="52"
+            fill="none"
+            stroke-width="11"
+            stroke-linecap="butt"
+            stroke-dasharray="{{ rem_len }} {{ C }}"
+            stroke-dashoffset="-{{ arc_len }}"
+        />
+        {% endif %}
+    </g>
+    <text
+        x="60"
+        y="61"
+        class="cluster-usage-gauge__percent cluster-usage-gauge__percent--{{ gauge_style }}"
+        dominant-baseline="central"
+        text-anchor="middle"
+    >{{ usage_pct }}%</text>
+</svg>
+{% endmacro %}

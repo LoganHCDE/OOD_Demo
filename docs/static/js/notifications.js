@@ -1,8 +1,7 @@
 (function () {
     "use strict";
 
-    var STORAGE_KEY = "pnnl-ondemand-notifications-read-v1";
-    var UNREAD_COUNT = 2;
+    var STORAGE_KEY = "pnnl-ondemand-notifications-read-v2";
 
     var btn = document.getElementById("notifications-menu-button");
     var panel = document.getElementById("notifications-panel");
@@ -10,6 +9,8 @@
     var root = btn && btn.closest(".top-bar-dropdown");
 
     if (!btn || !panel || !badge || !root) return;
+
+    var UNREAD_COUNT = panel.querySelectorAll(".notification-item").length;
 
     function hasMarkedRead() {
         try {
@@ -35,11 +36,11 @@
         var n = unreadCount();
         if (n === 0) {
             badge.hidden = true;
-            btn.setAttribute("aria-label", "Notifications");
+            btn.setAttribute("aria-label", "System updates");
         } else {
             badge.hidden = false;
             badge.textContent = String(n);
-            btn.setAttribute("aria-label", "Notifications, " + n + " unread");
+            btn.setAttribute("aria-label", "System updates, " + n + " unread");
         }
     }
 

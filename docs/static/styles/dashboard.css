@@ -329,6 +329,8 @@ a {
 }
 
 .top-bar-dropdown-item {
+    --top-bar-dropdown-icon-size: 1.25em;
+
     display: flex;
     align-items: center;
     gap: 10px;
@@ -402,17 +404,56 @@ a {
 }
 
 .top-bar-dropdown-item .fa-fw {
-    width: 1.25em;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--top-bar-dropdown-icon-size);
+    height: var(--top-bar-dropdown-icon-size);
     color: var(--pnnl-teal);
+    font-size: 1em;
+    line-height: 1;
 }
 
-/* Tool menu images: constrain intrinsic SVG/PNG size to match .fa-fw icons */
+/* Tool menu icons: uniform slot for Font Awesome, images, inline SVGs, and gauges */
+.top-bar-dropdown-app-img,
+.top-bar-dropdown-item .rc-documents-icon,
+.top-bar-dropdown-item [data-partition-usage-gauge] {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--top-bar-dropdown-icon-size);
+    height: var(--top-bar-dropdown-icon-size);
+}
+
 .top-bar-dropdown-app-img {
+    object-fit: contain;
+}
+
+.top-bar-dropdown-item .rc-documents-icon,
+.top-bar-dropdown-item [data-partition-usage-gauge] .cluster-usage-gauge-icon {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Node Status gauge icon for Partition Usage Status app tiles */
+.cluster-usage-gauge-icon {
     display: block;
     flex-shrink: 0;
-    width: 1.25em;
-    height: 1.25em;
-    object-fit: contain;
+    width: 70px;
+    height: 70px;
+    pointer-events: none;
+}
+
+.app-card .cluster-usage-gauge-icon {
+    width: min(120px, 72%);
+    height: min(120px, 72%);
+}
+
+.cluster-usage-gauge-icon--nav {
+    width: 100%;
+    height: 100%;
 }
 
 /* Compact partition gauge (matches dashboard usage cards, scaled for nav) */
@@ -452,9 +493,9 @@ a {
 
 /* Toolbar notifications dropdown */
 .notifications-dropdown {
-    min-width: min(360px, calc(100vw - var(--top-bar-panel-gutter)));
-    max-width: min(400px, calc(100vw - var(--top-bar-panel-gutter)));
-    max-height: min(70vh, 420px);
+    min-width: min(520px, calc(100vw - var(--top-bar-panel-gutter)));
+    max-width: min(560px, calc(100vw - var(--top-bar-panel-gutter)));
+    max-height: min(70vh, 480px);
     padding: 0;
     overflow: hidden;
     display: flex;
@@ -477,37 +518,47 @@ a {
 
 .notifications-list {
     margin: 0;
-    padding: 0;
+    padding: 8px 0 10px;
     list-style: none;
     overflow-y: auto;
 }
 
-.notification-card {
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
     margin: 0;
-    padding: 12px 14px 14px;
-    border-bottom: 1px solid var(--border);
+    padding: 8px 14px;
 }
 
-.notification-card:last-child {
-    border-bottom: none;
+.notification-card {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    background: #fff0e3;
 }
 
-.notification-card--maintenance {
-    border-left: 4px solid var(--pnnl-orange);
-    padding-left: calc(14px - 4px);
-    background: linear-gradient(90deg, rgba(233, 124, 0, 0.08) 0%, transparent 48%);
-}
-
-.notification-card__label {
-    display: block;
+.notification-card__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin-bottom: 6px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text);
 }
 
-.notification-card--maintenance .notification-card__label {
-    color: #b35f00;
+.notification-card__icon {
+    flex-shrink: 0;
+    color: var(--pnnl-orange);
+    font-size: 0.85rem;
+}
+
+.notification-card__title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--pnnl-orange);
 }
 
 .notification-card__text {
@@ -515,7 +566,16 @@ a {
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.45;
-    color: var(--muted);
+    color: var(--text);
+}
+
+.notification-item__time {
+    flex: 0 0 auto;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text);
+    white-space: nowrap;
 }
 
 .dashboard-shell {
@@ -527,7 +587,7 @@ a {
 
 /* Top band: welcome hero */
 .dashboard-top {
-    margin-bottom: 2.5rem;
+    margin-bottom: 1rem;
 }
 
 .dashboard-top .hero {
@@ -535,9 +595,14 @@ a {
 }
 
 .hero {
-    display: block;
-    margin-bottom: 2.5rem;
-    padding-top: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    margin-bottom: 0;
+    padding-top: 1rem;
 }
 
 h1 {
@@ -553,14 +618,16 @@ h1 span {
 }
 
 .ood-logo {
-    margin-top: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 0;
+    margin-left: auto;
 }
 
 .ood-logo-img {
     display: block;
-    width: min(200px, 48vw);
+    width: min(200px, 38vw);
     height: auto;
-    max-height: 104px;
+    max-height: 72px;
     object-fit: contain;
 }
 
@@ -569,6 +636,15 @@ h1 span {
 }
 
 .app-section {
+    margin-top: 1.55rem;
+}
+
+/* Tighter gap from top toolbar to first visible section (Favorites or tools) */
+.dashboard-shell > .app-section:not([hidden]) {
+    margin-top: 0;
+}
+
+.dashboard-shell > .app-section:not([hidden]) ~ .app-section:not([hidden]) {
     margin-top: 1.55rem;
 }
 
@@ -1065,6 +1141,16 @@ html.dark .rc-documents-icon__book-inner {
         max-height: min(50vh, 320px);
     }
 
+    .top-bar-menu-panel .notification-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .top-bar-menu-panel .notification-item__time {
+        align-self: flex-end;
+    }
+
     .top-bar-menu-panel .help-link {
         margin-left: 0;
     }
@@ -1081,6 +1167,21 @@ html.dark .rc-documents-icon__book-inner {
 }
 
 @media (max-width: 640px) {
+    .notifications-dropdown {
+        min-width: min(100%, calc(100vw - var(--top-bar-panel-gutter)));
+        max-width: calc(100vw - var(--top-bar-panel-gutter));
+    }
+
+    .notification-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .notification-item__time {
+        align-self: flex-end;
+    }
+
     .dashboard-shell {
         width: min(100% - 28px, 1240px);
         margin-top: 2rem;
@@ -2288,7 +2389,7 @@ html.dark .rc-documents-icon__book-inner {
 }
 
 .user-settings-billing-row__default {
-    padding-top: 1.85rem;
+    padding-top: 1.1rem;
 }
 
 .user-settings-billing-row__default input[type="radio"] {
@@ -4233,7 +4334,12 @@ html.dark .top-bar-dropdown-item:focus-visible {
     background: rgba(61, 187, 203, 0.18);
 }
 
-html.dark .notification-card--maintenance .notification-card__label {
+html.dark .notification-card {
+    background: rgba(233, 124, 0, 0.16);
+}
+
+html.dark .notification-card__title,
+html.dark .notification-card__icon {
     color: #fdba74;
 }
 

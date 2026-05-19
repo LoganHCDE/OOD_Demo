@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from flask import Flask, render_template, url_for
+from flask import Flask, jsonify, render_template, url_for
 
 app = Flask(__name__)
 
@@ -11,18 +11,41 @@ OPEN_ONDEMAND_TOOLS_APPS = [
     {
         "id": "partition-usage-status",
         "name": "Partition Usage Status",
-        "kind": "usage",
-        "usage": "80%",
+        "kind": "gauge",
+        "gauge_id": "nodes",
         "endpoint": "partition_usage",
     },
 ]
 
 
+def get_cluster_usage_stats() -> dict:
+    """Return current cluster usage stats (replace with live cluster API later)."""
+    return CLUSTER_USAGE_STATS
+
+
+def enrich_gauge_app(item: dict, stats: dict) -> dict:
+    """Attach live gauge values for dashboard / nav gauge icons."""
+    if item.get("kind") != "gauge":
+        return item
+
+    gauge_id = item.get("gauge_id", "nodes")
+    gauge = next((g for g in stats["gauges"] if g["id"] == gauge_id), None)
+    if not gauge:
+        return item
+
+    usage_pct = gauge["usage_pct"]
+    item["usage_pct"] = usage_pct
+    item["gauge_tier"] = "high" if usage_pct >= 75 else gauge["tier"]
+    item["gauge_circumference"] = stats["gauge_circumference"]
+    return item
+
+
 def resolve_app_links(apps: list[dict]) -> list[dict]:
     """Resolve internal routes via url_for (respects SCRIPT_NAME on GitHub Pages)."""
+    stats = get_cluster_usage_stats()
     resolved = []
     for entry in apps:
-        item = dict(entry)
+        item = enrich_gauge_app(dict(entry), stats)
         endpoint = item.get("endpoint")
         if endpoint:
             item["href"] = url_for(endpoint)
@@ -100,8 +123,34 @@ DASHBOARD_SECTIONS = [
     },
 ]
 
-# Names of currently active jobs for the top bar (empty list shows "No active jobs present")
-ACTIVE_JOBS = []
+# Demo active jobs for the top bar (empty list shows "No active jobs present")
+ACTIVE_JOBS = [
+    {"name": "Jupyter Notebook - Clay", "app_id": "jupyter"},
+    {"name": "Jupyter Lab - Graphical Analysis", "app_id": "jupyter"},
+    {"name": "VSCode - Flask Server", "app_id": "vscode"},
+]
+
+
+def _interactive_apps_by_id() -> dict[str, dict]:
+    by_id: dict[str, dict] = {}
+    for section in DASHBOARD_SECTIONS:
+        if section["id"] != "interactive-apps":
+            continue
+        for app in section["apps"]:
+            by_id[app["id"]] = app
+    return by_id
+
+
+def resolve_active_jobs() -> list[dict]:
+    """Attach interactive-app icon metadata to each active job."""
+    apps_by_id = _interactive_apps_by_id()
+    resolved = []
+    for job in ACTIVE_JOBS:
+        app = apps_by_id.get(job["app_id"])
+        if not app:
+            continue
+        resolved.append({"name": job["name"], "app": app})
+    return resolved
 
 FILES_DIRECTORY = {
     "segments": ["people", "User1", "Demo"],
@@ -123,16 +172,16 @@ FILES_DIRECTORY = {
 USER_SETTINGS_DEFAULTS = {
     "user_email": "User@email.com",
     "billing_accounts": [
-        {"id": "ops", "label": "Oceanography Dept."},
+        {"id": "Oceanography Dept.", "label": "Oceanography Dept."},
     ],
-    "default_billing_account_id": "ops",
+    "default_billing_account_id": "Oceanography Dept.",
 }
 
 
 @app.context_processor
 def inject_nav():
     return {
-        "active_jobs": ACTIVE_JOBS,
+        "active_jobs": resolve_active_jobs(),
         "tools_apps": resolve_app_links(OPEN_ONDEMAND_TOOLS_APPS),
         "user_settings_defaults": USER_SETTINGS_DEFAULTS,
     }
@@ -165,13 +214,18 @@ def job_status():
 
 @app.route("/partition-usage")
 def partition_usage():
-    cu = CLUSTER_USAGE_STATS
+    cu = get_cluster_usage_stats()
     cluster_usage = {
         **cu,
         "jobs_running_display": f"{cu['jobs_running']:,}",
         "jobs_queued_display": f"{cu['jobs_queued']:,}",
     }
     return render_template("partition_usage.html", cluster_usage=cluster_usage)
+
+
+@app.route("/api/cluster-usage-stats")
+def cluster_usage_stats_api():
+    return jsonify(get_cluster_usage_stats())
 
 
 if __name__ == "__main__":

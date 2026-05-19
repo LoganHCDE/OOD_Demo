@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 
+
 <html lang="en">
 <head>
     <script>
@@ -16,7 +17,7 @@
     <title>Dashboard - PNNL OnDemand</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="/OOD_Demo/static/styles/dashboard.css">
-    <script id="pnnl-user-settings-defaults" type="application/json">{"billing_accounts": [{"id": "ops", "label": "Oceanography Dept."}], "default_billing_account_id": "ops", "user_email": "User@email.com"}</script>
+    <script id="pnnl-user-settings-defaults" type="application/json">{"billing_accounts": [{"id": "Oceanography Dept.", "label": "Oceanography Dept."}], "default_billing_account_id": "Oceanography Dept.", "user_email": "User@email.com"}</script>
 </head>
 <body data-app-base="/OOD_Demo">
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -56,8 +57,6 @@
                         
 <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="93"
-    height="83"
     viewBox="0 0 93 83"
     fill="none"
     class="rc-documents-icon top-bar-dropdown-app-img"
@@ -85,7 +84,57 @@
                     
                     <a class="top-bar-dropdown-item" role="menuitem" title="Partition Usage Status" href="/OOD_Demo/partition-usage">
                         
-                        <span class="top-bar-dropdown-usage-icon" aria-hidden="true"><span>80%</span></span>
+                        <span data-partition-usage-gauge data-gauge-id="nodes">
+                        
+
+
+
+
+<svg
+    viewBox="0 0 120 120"
+    class="cluster-usage-gauge-icon cluster-usage-gauge-icon--nav"
+    role="img"
+    aria-hidden="true"
+    focusable="false"
+>
+    <g transform="rotate(-90 60 60)">
+        <circle class="cluster-usage-gauge__track" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-dasharray="326.73 326.73"/>
+        
+        <circle
+            class="cluster-usage-gauge__arc cluster-usage-gauge__arc--low"
+            cx="60"
+            cy="60"
+            r="52"
+            fill="none"
+            stroke-width="11"
+            stroke-linecap="butt"
+            stroke-dasharray="130.69 326.73"
+        />
+        
+        
+        <circle
+            class="cluster-usage-gauge__arc--available-ring"
+            cx="60"
+            cy="60"
+            r="52"
+            fill="none"
+            stroke-width="11"
+            stroke-linecap="butt"
+            stroke-dasharray="196.04 326.73"
+            stroke-dashoffset="-130.69"
+        />
+        
+    </g>
+    <text
+        x="60"
+        y="61"
+        class="cluster-usage-gauge__percent cluster-usage-gauge__percent--low"
+        dominant-baseline="central"
+        text-anchor="middle"
+    >40%</text>
+</svg>
+
+                        </span>
                         
                         Partition Usage Status
                     </a>
@@ -95,12 +144,33 @@
             <div class="top-bar-dropdown">
                 <button type="button" id="active-menu-button" class="top-bar-dropdown-trigger" aria-label="Active jobs" aria-expanded="false" aria-haspopup="true" aria-controls="active-menu">
                     <i class="fas fa-list-check fa-fw" aria-hidden="true"></i>
-                    <span class="top-bar__label" aria-hidden="true">Active</span>
+                    <span class="top-bar__label" aria-hidden="true">Active Job</span>
                     <i class="fas fa-caret-down top-bar-dropdown-caret" aria-hidden="true"></i>
                 </button>
                 <div id="active-menu" class="top-bar-dropdown-panel top-bar-dropdown-panel--start" role="menu" hidden>
                     
-                        <span class="top-bar-dropdown-empty" role="menuitem">No active jobs present</span>
+                        
+                        <span class="top-bar-dropdown-item top-bar-dropdown-item--job" role="menuitem">
+                            
+                            <img class="top-bar-dropdown-app-img" src="/OOD_Demo/static/assets/Jupyter.svg" alt="" />
+                            
+                            Jupyter Notebook - Clay
+                        </span>
+                        
+                        <span class="top-bar-dropdown-item top-bar-dropdown-item--job" role="menuitem">
+                            
+                            <img class="top-bar-dropdown-app-img" src="/OOD_Demo/static/assets/Jupyter.svg" alt="" />
+                            
+                            Jupyter Lab - Graphical Analysis
+                        </span>
+                        
+                        <span class="top-bar-dropdown-item top-bar-dropdown-item--job" role="menuitem">
+                            
+                            <img class="top-bar-dropdown-app-img" src="/OOD_Demo/static/assets/vscode.svg" alt="" />
+                            
+                            VSCode - Flask Server
+                        </span>
+                        
                     
                 </div>
             </div>
@@ -116,6 +186,10 @@
                         <i class="fas fa-info-circle fa-fw" aria-hidden="true"></i>
                         Online Documentation
                     </a>
+                    <a class="top-bar-dropdown-item" role="menuitem" title="Submit Ticket for RC Support" href="https://hpc.tanuki-pages.pnnl.gov/user-docs/support/submit-rc-support-ticket.html" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-ticket fa-fw" aria-hidden="true"></i>
+                        Submit Ticket for RC Support
+                    </a>
                 </div>
             </div>
             </nav>
@@ -126,13 +200,13 @@
                     type="button"
                     id="notifications-menu-button"
                     class="top-bar-dropdown-trigger top-bar-dropdown-trigger--bell"
-                    aria-label="Notifications, 2 unread"
+                    aria-label="System updates, 4 unread"
                     aria-expanded="false"
                     aria-haspopup="true"
                     aria-controls="notifications-panel"
                 >
                     <i class="fas fa-bell" aria-hidden="true"></i>
-                    <span class="notification-bell-badge" aria-hidden="true">2</span>
+                    <span class="notification-bell-badge" aria-hidden="true">4</span>
                 </button>
                 <div
                     id="notifications-panel"
@@ -142,22 +216,48 @@
                     hidden
                 >
                     <div class="notifications-dropdown-header">
-                        <h2 id="notifications-dropdown-title" class="notifications-dropdown-title">Notifications</h2>
+                        <h2 id="notifications-dropdown-title" class="notifications-dropdown-title">System Update</h2>
                     </div>
                     <ul class="notifications-list">
-                        <li class="notification-card notification-card--maintenance">
-                            <span class="notification-card__label">System maintenance</span>
-                            <p class="notification-card__text">
-                                Scheduled maintenance Sunday 2:00–6:00 AM Pacific. Batch jobs will continue to run; interactive
-                                OnDemand sessions may be interrupted briefly during the window.
-                            </p>
+                        <li class="notification-item">
+                            <article class="notification-card">
+                                <header class="notification-card__header">
+                                    <i class="fas fa-bell notification-card__icon" aria-hidden="true"></i>
+                                    <h3 class="notification-card__title">Jupyter Notebook</h3>
+                                </header>
+                                <p class="notification-card__text">Jupyter updated to the newest version</p>
+                            </article>
+                            <time class="notification-item__time" datetime="2026-05-18T09:55:00">5 minutes ago</time>
                         </li>
-                        <li class="notification-card">
-                            <span class="notification-card__label">Cluster usage</span>
-                            <p class="notification-card__text">
-                                Swift partition is at elevated utilization. Consider shorter walltimes or an alternate partition if
-                                your job queues longer than usual.
-                            </p>
+                        <li class="notification-item">
+                            <article class="notification-card">
+                                <header class="notification-card__header">
+                                    <i class="fas fa-bell notification-card__icon" aria-hidden="true"></i>
+                                    <h3 class="notification-card__title">Jupyter Notebook</h3>
+                                </header>
+                                <p class="notification-card__text">Packages bug fixed for conda environment exports</p>
+                            </article>
+                            <time class="notification-item__time" datetime="2026-05-11">5/11/2026</time>
+                        </li>
+                        <li class="notification-item">
+                            <article class="notification-card">
+                                <header class="notification-card__header">
+                                    <i class="fas fa-bell notification-card__icon" aria-hidden="true"></i>
+                                    <h3 class="notification-card__title">RStudio</h3>
+                                </header>
+                                <p class="notification-card__text">Auto submission bug fixed</p>
+                            </article>
+                            <time class="notification-item__time" datetime="2026-05-06">5/6/2026</time>
+                        </li>
+                        <li class="notification-item">
+                            <article class="notification-card">
+                                <header class="notification-card__header">
+                                    <i class="fas fa-bell notification-card__icon" aria-hidden="true"></i>
+                                    <h3 class="notification-card__title">RStudio</h3>
+                                </header>
+                                <p class="notification-card__text">Session startup reliability improvements</p>
+                            </article>
+                            <time class="notification-item__time" datetime="2026-05-01">5/1/2026</time>
                         </li>
                     </ul>
                 </div>
@@ -233,7 +333,7 @@
 
     <section id="dashboard-favorites" class="app-section app-section--favorites" aria-labelledby="favorites-section-title" hidden>
         <div class="section-heading">
-            <h2 id="favorites-section-title">Favorited</h2>
+            <h2 id="favorites-section-title">Favorites</h2>
         </div>
         <div id="favorites-grid" class="app-grid" data-section-id="favorites"></div>
     </section>
@@ -324,8 +424,6 @@
                             
 <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="93"
-    height="83"
     viewBox="0 0 93 83"
     fill="none"
     class="rc-documents-icon app-icon-img"
@@ -372,8 +470,61 @@
                     </button>
 
                     
-                    <span class="usage-icon" aria-hidden="true">
-                        <span>80%</span>
+                    <span
+                        class="app-icon"
+                        aria-hidden="true"
+                        data-partition-usage-gauge
+                        data-gauge-id="nodes"
+                    >
+                        
+
+
+
+
+<svg
+    viewBox="0 0 120 120"
+    class="cluster-usage-gauge-icon "
+    role="img"
+    aria-hidden="true"
+    focusable="false"
+>
+    <g transform="rotate(-90 60 60)">
+        <circle class="cluster-usage-gauge__track" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-dasharray="326.73 326.73"/>
+        
+        <circle
+            class="cluster-usage-gauge__arc cluster-usage-gauge__arc--low"
+            cx="60"
+            cy="60"
+            r="52"
+            fill="none"
+            stroke-width="11"
+            stroke-linecap="butt"
+            stroke-dasharray="130.69 326.73"
+        />
+        
+        
+        <circle
+            class="cluster-usage-gauge__arc--available-ring"
+            cx="60"
+            cy="60"
+            r="52"
+            fill="none"
+            stroke-width="11"
+            stroke-linecap="butt"
+            stroke-dasharray="196.04 326.73"
+            stroke-dashoffset="-130.69"
+        />
+        
+    </g>
+    <text
+        x="60"
+        y="61"
+        class="cluster-usage-gauge__percent cluster-usage-gauge__percent--low"
+        dominant-baseline="central"
+        text-anchor="middle"
+    >40%</text>
+</svg>
+
                     </span>
                     
                 </div>
@@ -693,7 +844,7 @@
                             Add billing account
                         </button>
                     </div>
-                    <p class="user-settings-modal__section-help">Select a default account for new sessions. Account ID is submitted with job forms.</p>
+                    <p class="user-settings-modal__section-help">Select a default account for new sessions.</p>
                     <div class="user-settings-billing-list" data-user-settings-billing-list></div>
                 </section>
 
@@ -707,6 +858,7 @@
 
     
 <script src="/OOD_Demo/static/js/app-favorites.js" defer></script>
+<script src="/OOD_Demo/static/js/partition-usage-gauge-icon.js" defer></script>
 
     <script src="/OOD_Demo/static/js/user-settings-storage.js" defer></script>
     <script src="/OOD_Demo/static/js/user-settings.js" defer></script>

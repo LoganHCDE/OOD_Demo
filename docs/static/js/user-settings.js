@@ -15,6 +15,11 @@
 
     var opener = null;
 
+    function accountName(account) {
+        if (!account) return "";
+        return String(account.label || account.id || "").trim();
+    }
+
     function getFocusableElements() {
         return Array.from(
             modal.querySelectorAll(
@@ -36,11 +41,7 @@
             "</div>" +
             '<div class="user-settings-billing-row__fields">' +
             '<div class="user-settings-billing-row__field">' +
-            "<label>Account ID</label>" +
-            '<input type="text" data-user-settings-billing-id autocomplete="off" required>' +
-            "</div>" +
-            '<div class="user-settings-billing-row__field">' +
-            "<label>Display name</label>" +
+            "<label>Account Name</label>" +
             '<input type="text" data-user-settings-billing-label autocomplete="off" required>' +
             "</div>" +
             "</div>" +
@@ -49,12 +50,10 @@
             "</button>";
 
         var radio = row.querySelector('input[type="radio"]');
-        var idInput = row.querySelector("[data-user-settings-billing-id]");
-        var labelInput = row.querySelector("[data-user-settings-billing-label]");
+        var nameInput = row.querySelector("[data-user-settings-billing-label]");
         var removeButton = row.querySelector("[data-user-settings-remove-billing]");
 
-        idInput.value = account && account.id ? account.id : "";
-        labelInput.value = account && account.label ? account.label : "";
+        nameInput.value = accountName(account);
         radio.checked = Boolean(isDefault);
         removeButton.disabled = isOnlyRow;
 
@@ -71,13 +70,13 @@
 
         radio.addEventListener("change", function () {
             if (radio.checked) {
-                radio.value = idInput.value.trim() || "row-" + Date.now();
+                radio.value = nameInput.value.trim() || "row-" + Date.now();
             }
         });
 
-        idInput.addEventListener("input", function () {
+        nameInput.addEventListener("input", function () {
             if (radio.checked) {
-                radio.value = idInput.value.trim();
+                radio.value = nameInput.value.trim();
             }
         });
 
@@ -93,6 +92,15 @@
         });
     }
 
+    function isDefaultAccount(account, settings, index) {
+        var name = accountName(account);
+        var defaultId = String(settings.default_billing_account_id || "").trim();
+        if (defaultId && (name === defaultId || account.id === defaultId || account.label === defaultId)) {
+            return true;
+        }
+        return index === 0 && !defaultId;
+    }
+
     function renderBillingAccounts(settings) {
         billingList.innerHTML = "";
         var accounts = settings.billing_accounts || [];
@@ -101,9 +109,7 @@
         }
 
         accounts.forEach(function (account, index) {
-            var isDefault =
-                account.id === settings.default_billing_account_id ||
-                (index === 0 && !settings.default_billing_account_id);
+            var isDefault = isDefaultAccount(account, settings, index);
             billingList.appendChild(createBillingRow(account, isDefault, accounts.length === 1));
         });
         updateRemoveButtons();
@@ -113,9 +119,9 @@
     function syncDefaultRadioValues() {
         billingList.querySelectorAll("[data-user-settings-billing-row]").forEach(function (row) {
             var radio = row.querySelector('input[type="radio"]');
-            var idInput = row.querySelector("[data-user-settings-billing-id]");
-            if (radio && idInput) {
-                radio.value = idInput.value.trim() || "pending-" + Math.random().toString(36).slice(2);
+            var nameInput = row.querySelector("[data-user-settings-billing-label]");
+            if (radio && nameInput) {
+                radio.value = nameInput.value.trim() || "pending-" + Math.random().toString(36).slice(2);
             }
         });
     }
@@ -130,18 +136,16 @@
         var defaultId = "";
 
         billingList.querySelectorAll("[data-user-settings-billing-row]").forEach(function (row) {
-            var idInput = row.querySelector("[data-user-settings-billing-id]");
-            var labelInput = row.querySelector("[data-user-settings-billing-label]");
+            var nameInput = row.querySelector("[data-user-settings-billing-label]");
             var radio = row.querySelector('input[type="radio"]');
-            if (!idInput || !labelInput) return;
+            if (!nameInput) return;
 
-            var id = idInput.value.trim();
-            var label = labelInput.value.trim();
-            if (!id || !label) return;
+            var name = nameInput.value.trim();
+            if (!name) return;
 
-            accounts.push({ id: id, label: label });
+            accounts.push({ id: name, label: name });
             if (radio && radio.checked) {
-                defaultId = id;
+                defaultId = name;
             }
         });
 
@@ -161,27 +165,27 @@
 
         var billing = collectBillingAccounts();
         if (billing.accounts.length === 0) {
-            var firstId = billingList.querySelector("[data-user-settings-billing-id]");
-            if (firstId) {
-                firstId.setCustomValidity("Add at least one billing account with an account ID and display name.");
-                firstId.reportValidity();
-                firstId.setCustomValidity("");
+            var firstName = billingList.querySelector("[data-user-settings-billing-label]");
+            if (firstName) {
+                firstName.setCustomValidity("Add at least one billing account with an account name.");
+                firstName.reportValidity();
+                firstName.setCustomValidity("");
             }
             return false;
         }
 
-        var ids = billing.accounts.map(function (account) {
+        var names = billing.accounts.map(function (account) {
             return account.id;
         });
-        var uniqueIds = ids.filter(function (id, index) {
-            return ids.indexOf(id) === index;
+        var uniqueNames = names.filter(function (name, index) {
+            return names.indexOf(name) === index;
         });
-        if (uniqueIds.length !== ids.length) {
-            var duplicateId = billingList.querySelector("[data-user-settings-billing-id]");
-            if (duplicateId) {
-                duplicateId.setCustomValidity("Billing account IDs must be unique.");
-                duplicateId.reportValidity();
-                duplicateId.setCustomValidity("");
+        if (uniqueNames.length !== names.length) {
+            var duplicateName = billingList.querySelector("[data-user-settings-billing-label]");
+            if (duplicateName) {
+                duplicateName.setCustomValidity("Billing account names must be unique.");
+                duplicateName.reportValidity();
+                duplicateName.setCustomValidity("");
             }
             return false;
         }
@@ -215,7 +219,7 @@
         window.setTimeout(function () {
             if (options.section === "billing" && billingSection) {
                 billingSection.scrollIntoView({ block: "nearest" });
-                var firstBillingInput = billingList.querySelector("[data-user-settings-billing-id]");
+                var firstBillingInput = billingList.querySelector("[data-user-settings-billing-label]");
                 if (firstBillingInput) {
                     firstBillingInput.focus();
                     return;
@@ -246,8 +250,8 @@
         updateRemoveButtons();
         var lastRow = billingList.querySelector("[data-user-settings-billing-row]:last-child");
         if (lastRow) {
-            var idInput = lastRow.querySelector("[data-user-settings-billing-id]");
-            if (idInput) idInput.focus();
+            var nameInput = lastRow.querySelector("[data-user-settings-billing-label]");
+            if (nameInput) nameInput.focus();
         }
     });
 

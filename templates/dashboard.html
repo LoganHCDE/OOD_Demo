@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/rc_documents_icon.html" import rc_documents_icon %}
+{% from "macros/cluster_usage_gauge_icon.html" import cluster_usage_gauge_icon %}
 
 {% block title %}Dashboard - PNNL OnDemand{% endblock %}
 
@@ -26,7 +27,7 @@
 
     <section id="dashboard-favorites" class="app-section app-section--favorites" aria-labelledby="favorites-section-title" hidden>
         <div class="section-heading">
-            <h2 id="favorites-section-title">Favorited</h2>
+            <h2 id="favorites-section-title">Favorites</h2>
         </div>
         <div id="favorites-grid" class="app-grid" data-section-id="favorites"></div>
     </section>
@@ -57,9 +58,19 @@
                         <i class="{% if item.favorite %}fas{% else %}far{% endif %} fa-star" aria-hidden="true"></i>
                     </button>
 
-                    {% if item.kind == "usage" %}
-                    <span class="usage-icon" aria-hidden="true">
-                        <span>{{ item.usage }}</span>
+                    {% if item.kind == "gauge" %}
+                    <span
+                        class="app-icon"
+                        aria-hidden="true"
+                        data-partition-usage-gauge
+                        data-gauge-id="{{ item.gauge_id | default('nodes') }}"
+                    >
+                        {{ cluster_usage_gauge_icon(
+                            item.usage_pct,
+                            item.gauge_tier,
+                            "",
+                            item.gauge_circumference
+                        ) }}
                     </span>
                     {% elif item.kind == "brand" %}
                     <span class="brand-icon brand-{{ item.brand }}" aria-hidden="true">
@@ -98,4 +109,5 @@
 
 {% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/app-favorites.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/partition-usage-gauge-icon.js') }}" defer></script>
 {% endblock %}

@@ -31,31 +31,53 @@
 
     function normalizeBillingAccount(account) {
         if (!account || typeof account !== "object") return null;
+        var name = String(account.label || account.id || "").trim();
+        if (!name) return null;
+        return { id: name, label: name };
+    }
+
+    function rawAccountMatchesDefault(account, defaultId) {
+        if (!account || typeof account !== "object" || !defaultId) return false;
         var id = String(account.id || "").trim();
         var label = String(account.label || "").trim();
-        if (!id || !label) return null;
-        return { id: id, label: label };
+        var name = label || id;
+        return defaultId === id || defaultId === label || defaultId === name;
+    }
+
+    function resolveDefaultBillingAccountId(rawAccounts, billingAccounts, defaultId) {
+        if (!defaultId) {
+            return billingAccounts.length > 0 ? billingAccounts[0].id : "";
+        }
+
+        var matchedRaw = rawAccounts.find(function (account) {
+            return rawAccountMatchesDefault(account, defaultId);
+        });
+        if (matchedRaw) {
+            var normalizedMatch = normalizeBillingAccount(matchedRaw);
+            if (normalizedMatch) return normalizedMatch.id;
+        }
+
+        var defaultAccount = billingAccounts.find(function (account) {
+            return account.id === defaultId;
+        });
+        if (defaultAccount) return defaultAccount.id;
+
+        return billingAccounts.length > 0 ? billingAccounts[0].id : "";
     }
 
     function normalize(settings) {
         var defaults = readDefaultsElement();
         var source = settings && typeof settings === "object" ? settings : defaults;
-        var billingAccounts = Array.isArray(source.billing_accounts)
-            ? source.billing_accounts.map(normalizeBillingAccount).filter(Boolean)
-            : [];
+        var rawAccounts = Array.isArray(source.billing_accounts) ? source.billing_accounts : [];
+        var billingAccounts = rawAccounts.map(normalizeBillingAccount).filter(Boolean);
 
         if (billingAccounts.length === 0) {
-            billingAccounts = (defaults.billing_accounts || [])
-                .map(normalizeBillingAccount)
-                .filter(Boolean);
+            rawAccounts = defaults.billing_accounts || [];
+            billingAccounts = rawAccounts.map(normalizeBillingAccount).filter(Boolean);
         }
 
         var defaultId = String(source.default_billing_account_id || "").trim();
-        if (!billingAccounts.some(function (account) {
-            return account.id === defaultId;
-        })) {
-            defaultId = billingAccounts.length > 0 ? billingAccounts[0].id : "";
-        }
+        defaultId = resolveDefaultBillingAccountId(rawAccounts, billingAccounts, defaultId);
 
         var userEmail = String(source.user_email || defaults.user_email || "").trim();
         if (!userEmail) {

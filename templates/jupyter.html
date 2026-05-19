@@ -20,7 +20,7 @@
                 <p class="account-card__line">
                     <strong>Billing Account:</strong>
                     <span id="billing-account-display" data-billing-account-display>Oceanography Dept.</span>
-                    <button class="account-card__change" type="button" data-user-settings-open data-user-settings-section="billing">(Manage)</button>
+                    <button class="account-card__change" type="button" data-user-settings-open data-user-settings-section="billing">(Change)</button>
                 </p>
                 <p class="account-card__line">
                     <strong>Email:</strong>
@@ -32,7 +32,7 @@
                     <legend class="account-card__email-legend">Receive an Email:</legend>
                     <div class="jupyter-checkbox">
                         <input value="1" type="checkbox" name="bc_email_on_started" id="bc_email_on_started" form="jupyter-session-form">
-                        <label for="bc_email_on_started">on Session Start</label>
+                        <label for="bc_email_on_started">On Session Start</label>
                     </div>
                     <div class="jupyter-checkbox">
                         <input value="1" type="checkbox" name="bc_email_on_terminated" id="bc_email_on_terminated" form="jupyter-session-form">
@@ -100,7 +100,7 @@
 
             <form id="jupyter-session-form" class="jupyter-form new_batch_connect_session_context" method="post">
                 <input type="hidden" name="mode" value="0" id="jupyter_mode_notebook">
-                <input type="hidden" name="account" id="account" value="ops">
+                <input type="hidden" name="account" id="account" value="Oceanography Dept.">
                 <input type="hidden" name="user_email" id="user_email" value="User@email.com">
                 <input type="hidden" name="ood_num_hours" id="ood_num_hours" value="01:30:00">
 
