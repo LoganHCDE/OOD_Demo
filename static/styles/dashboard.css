@@ -3187,11 +3187,6 @@ html.dark .rc-documents-icon__book-inner {
     gap: 1.25rem;
 }
 
-.jupyter-advanced__lab-option {
-    margin-top: 1.25rem;
-    padding-top: 0.5rem;
-}
-
 .jupyter-radio-field {
     margin: 0;
     padding: 0;
